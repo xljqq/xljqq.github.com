@@ -6,40 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://xljqq.github.com">
-  <title>使用Hexo+Github一步步搭建属于自己的博客 | xljqq的博客</title>
+  <title>goaccess分析ngnix的accesslog日志 | xljqq的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、安装Node.js和配置好Node.js环境打开cmd命令行，成功界面如下  2、安装Git和配置好Git环境打开cmd命令行，成功界面如下  3、Github账户注册和新建项目项目必须要遵守格式：账户名.github.io，不然接下来会有很多麻烦。并且需要勾选Initialize this repository with a README  在建好的项目右侧有个settings按钮，点击它，">
+  <meta name="description" content="1、安装goaccess安装goacess的一些支持库，如果后面操作出现问题，很有可能是因为某些库位安装，主要包括：glib2,glib2-devel,geoip,geoip-devel,ncurses-devel,zlib,zlib-devel,gcc。 12yum install glib2 glib2-devel GeoIP-devel  ncurses-devel zlib zlib-de">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Hexo+Github一步步搭建属于自己的博客">
-<meta property="og:url" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/index.html">
+<meta property="og:title" content="goaccess分析ngnix的accesslog日志">
+<meta property="og:url" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/index.html">
 <meta property="og:site_name" content="xljqq的博客">
-<meta property="og:description" content="1、安装Node.js和配置好Node.js环境打开cmd命令行，成功界面如下  2、安装Git和配置好Git环境打开cmd命令行，成功界面如下  3、Github账户注册和新建项目项目必须要遵守格式：账户名.github.io，不然接下来会有很多麻烦。并且需要勾选Initialize this repository with a README  在建好的项目右侧有个settings按钮，点击它，">
+<meta property="og:description" content="1、安装goaccess安装goacess的一些支持库，如果后面操作出现问题，很有可能是因为某些库位安装，主要包括：glib2,glib2-devel,geoip,geoip-devel,ncurses-devel,zlib,zlib-devel,gcc。 12yum install glib2 glib2-devel GeoIP-devel  ncurses-devel zlib zlib-de">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/node.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/git.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-repository.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-pages.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-install.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-install-check.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-init.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-init-success.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/npm-install.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-use.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-start.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-port.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-success.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-ssh.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-ssh-add.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-check.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-blog.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-dir.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-deploy.png">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-deploy-success.png">
-<meta property="og:updated_time" content="2018-11-12T07:03:02.111Z">
+<meta property="og:image" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/geo-ip.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-error.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-success.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess.png">
+<meta property="og:updated_time" content="2018-11-12T10:11:16.802Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用Hexo+Github一步步搭建属于自己的博客">
-<meta name="twitter:description" content="1、安装Node.js和配置好Node.js环境打开cmd命令行，成功界面如下  2、安装Git和配置好Git环境打开cmd命令行，成功界面如下  3、Github账户注册和新建项目项目必须要遵守格式：账户名.github.io，不然接下来会有很多麻烦。并且需要勾选Initialize this repository with a README  在建好的项目右侧有个settings按钮，点击它，">
-<meta name="twitter:image" content="https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/node.png">
+<meta name="twitter:title" content="goaccess分析ngnix的accesslog日志">
+<meta name="twitter:description" content="1、安装goaccess安装goacess的一些支持库，如果后面操作出现问题，很有可能是因为某些库位安装，主要包括：glib2,glib2-devel,geoip,geoip-devel,ncurses-devel,zlib,zlib-devel,gcc。 12yum install glib2 glib2-devel GeoIP-devel  ncurses-devel zlib zlib-de">
+<meta name="twitter:image" content="https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/geo-ip.png">
   
     <link rel="alternative" href="/atom.xml" title="xljqq的博客" type="application/atom+xml">
   
@@ -175,98 +159,51 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-使用Hexo+Github一步步搭建属于自己的博客" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-goaccess分析ngnix的accesslog日志" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      使用Hexo+Github一步步搭建属于自己的博客
+      goaccess分析ngnix的accesslog日志
     </h1>
   
 
         
-        <a href="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/" class="archive-article-date">
-  	<time datetime="2018-11-09T09:38:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-09</time>
+        <a href="/2018/11/12/goaccess分析ngnix的accesslog日志/" class="archive-article-date">
+  	<time datetime="2018-11-12T08:17:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1、安装Node-js和配置好Node-js环境"><a href="#1、安装Node-js和配置好Node-js环境" class="headerlink" title="1、安装Node.js和配置好Node.js环境"></a>1、安装Node.js和配置好Node.js环境</h1><p>打开cmd命令行，成功界面如下</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/node.png" alt="img"></p>
-<h1 id="2、安装Git和配置好Git环境"><a href="#2、安装Git和配置好Git环境" class="headerlink" title="2、安装Git和配置好Git环境"></a>2、安装Git和配置好Git环境</h1><p>打开cmd命令行，成功界面如下</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/git.png" alt="img"></p>
-<h1 id="3、Github账户注册和新建项目"><a href="#3、Github账户注册和新建项目" class="headerlink" title="3、Github账户注册和新建项目"></a>3、Github账户注册和新建项目</h1><p>项目必须要遵守格式：账户名.github.io，不然接下来会有很多麻烦。并且需要勾选Initialize this repository with a README</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-repository.png" alt="img"></p>
-<p>在建好的项目右侧有个settings按钮，点击它，向下拉到GitHub Pages，你会看到那边有个网址，访问它，你将会惊奇的发现该项目已经被部署到网络上，能够通过外网来访问它。 </p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-pages.png" alt="img"></p>
-<h1 id="4、安装Hexo"><a href="#4、安装Hexo" class="headerlink" title="4、安装Hexo"></a>4、安装Hexo</h1><p>在自己认为合适的地方创个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面。</p>
-<p>输入npm install hexo -g，开始安装Hexo</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-install.png" alt="img"></p>
-<p>输入hexo -v，检查hexo是否安装成功。</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-install-check.png" alt="img"></p>
-<p>输入hexo init，初始化该文件夹（有点漫长的等待。。。）</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-init.png" alt="img"></p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-init-success.png" alt="img"></p>
-<p>看到后面的“Start blogging with Hexo！”，初始化成功。</p>
-<p>输入npm install，安装所需要的组件，全局配置设置到淘宝源：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/npm-install.png" alt="img"></p>
-<p>输入hexo g，首次体验Hexo</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-use.png" alt="img"></p>
-<p>输入hexo s，开启服务器，访问该网址，正式体验Hexo</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-start.png" alt="img"></p>
-<p>如果端口被占用了。此时我们ctrl+c停止服务器，接着输入“hexo server -p 端口号”来改变端口号</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-port.png" alt="img"></p>
-<p>那么出现如下图就成功了</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-success.png" alt="img"></p>
-<h1 id="5、将Hexo与Github-page联系起来"><a href="#5、将Hexo与Github-page联系起来" class="headerlink" title="5、将Hexo与Github page联系起来"></a>5、将Hexo与Github page联系起来</h1><p>设置Git的user name和email（如果是第一次的话）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config –-global user.name “xljqq”  //(“”的账号是刚才Github里面自己注册的账号) </span><br><span class="line">git config –-global user.email “860665474@qq.com” //(""的邮箱是你自己注册的邮箱)</span><br></pre></td></tr></table></figure>
-<p>生成SSH密钥设置到Github(需先设置user.name和user.email)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.ssh </span><br><span class="line">ssh-keygen -t rsa -C “860665474@qq.com” //打自己的邮箱</span><br></pre></td></tr></table></figure>
-<p>输入eval “$(ssh-agent -s)”，添加密钥到ssh-agent</p>
-<p>再输入ssh-add ~/.ssh/id_rsa，添加生成的SSH key到ssh-agent</p>
-<p>登录Github，点击头像下的settings，添加ssh</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-ssh.png" alt="img"></p>
-<p>新建一个new ssh key，将id_rsa.pub文件里的内容复制上去</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-ssh-add.png" alt="img"></p>
-<p>输入ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>，测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明成功了</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/github-check.png" alt="img"></p>
-<p><strong>问题：</strong>假如ssh-key配置失败，那么只要以下步骤就能完全解决</p>
-<p>首先，清除所有的key-pair</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-add -D</span><br><span class="line">rm -r ~/.ssh</span><br></pre></td></tr></table></figure>
-<p>删除你在github中的public-key</p>
-<p>重新生成ssh密钥对</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "xxx@xxx.com"</span><br></pre></td></tr></table></figure>
-<p>接下来正常操作<br>在github上添加公钥public-key:<br>1、首先在你的终端运行 xclip -sel c ~/.ssh/id_rsa.pub将公钥内容复制到剪切板<br>2、在github上添加公钥时，直接复制即可<br>3、保存</p>
-<p>测试：</p>
-<p>在终端 ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a></p>
-<h1 id="6、配置Deployment"><a href="#6、配置Deployment" class="headerlink" title="6、配置Deployment"></a>6、配置Deployment</h1><p>在其文件夹中，找到_config.yml文件，修改repo值（在末尾）</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repository:</span> <span class="attr">https://用户名:密码@github.com/xljqq/xljqq.github.com.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-<h1 id="7、新建一篇博客"><a href="#7、新建一篇博客" class="headerlink" title="7、新建一篇博客"></a>7、新建一篇博客</h1><p>在cmd执行命令：hexo new post “博客名”</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-blog.png" alt="img"></p>
-<p>这时候在文件夹_posts目录下将会看到已经创建的文件</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-dir.png" alt="img"></p>
-<p>在生成以及部署文章之前，需要安装一个扩展</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p>使用编辑器编好文章，那么就可以使用命令：hexo d -g，生成以及部署了</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-deploy.png" alt="img"></p>
-<p>部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章</p>
-<p><img src="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/hexo-deploy-success.png" alt="img"></p>
-<h1 id="7、hexo换皮肤"><a href="#7、hexo换皮肤" class="headerlink" title="7、hexo换皮肤"></a>7、hexo换皮肤</h1><p>安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</span><br></pre></td></tr></table></figure>
-<p>配置</p>
-<p>修改hexo根目录下的 <code>_config.yml</code> ： <code>theme: yilia</code></p>
-<p>更新</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd themes/yilia</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
-<h1 id="8、hexo添加本地图片"><a href="#8、hexo添加本地图片" class="headerlink" title="8、hexo添加本地图片"></a>8、hexo添加本地图片</h1><p> 把主页配置文件<code>_config.yml</code> 里的<code>post_asset_folder:</code>这个选项设置为<code>true</code></p>
-<p>在你的hexo目录下执行这样一句话<code>npm install hexo-asset-image --save</code>，这是下载安装一个可以上传本地图片的插件。</p>
-<p>安装完毕后，使用<code>hexo n &quot;xxxx&quot;</code>来生成md博文时，<code>/source/_posts</code>文件夹内除了<code>xxxx.md</code>文件还有一个同名的文件夹。</p>
-<p>最后在<code>xxxx.md</code>中想引入图片时，先把图片复制到xxxx这个文件夹中，然后只需要在xxxx.md中按照markdown的格式引入图片：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![<span class="string">你想输入的替代文字</span>](<span class="link">xxxx/图片名.jpg</span>)</span><br></pre></td></tr></table></figure>
+        <h1 id="1、安装goaccess"><a href="#1、安装goaccess" class="headerlink" title="1、安装goaccess"></a>1、安装goaccess</h1><p>安装goacess的一些支持库，如果后面操作出现问题，很有可能是因为某些库位安装，主要包括：glib2,glib2-devel,geoip,geoip-devel,ncurses-devel,zlib,zlib-devel,gcc。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install glib2 glib2-devel GeoIP-devel  ncurses-devel zlib zlib-devel</span><br><span class="line">yum install gcc -y</span><br></pre></td></tr></table></figure>
+<p>如果是一键安装，注意安装过程中的提示，哪些未安装成功，需要单独安装，比如我在本地操作时，ncurses-devle、zlib、zlib-devel默认已安装，geo-ip就未安装成功，需要单独安装。</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/geo-ip.png" alt="img"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.6.tar.gz</span><br><span class="line">wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz</span><br><span class="line"></span><br><span class="line">tar -xzvf GeoIP-1.4.6.tar.gz</span><br><span class="line">cd GeoIP-1.4.6</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line">cd ..</span><br><span class="line">mv GeoIP.dat.gz /usr/local/share/GeoIP/</span><br></pre></td></tr></table></figure>
+<p>接下来我们就可以安装goaccess了，这里我是用的编译安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget http://tar.goaccess.io/goaccess-0.8.1.tar.gz</span><br><span class="line">tar -xzvf goaccess-0.8.1.tar.gz</span><br><span class="line">cd goaccess-0.8.1/</span><br><span class="line">./configure --enable-geoip --enable-utf8</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>运行goaccess命令查看是否安装成功，结果我在本地安装时提示下面错误：</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-error.png" alt="img"></p>
+<p>32位系统使用下面命令解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/lib/libGeoIP.so* /lib/</span><br></pre></td></tr></table></figure>
+<p>64位系统尝试使用下面命令解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/lib/libGeoIP.so* /lib64/</span><br></pre></td></tr></table></figure>
+<p>再运行goaccess命令正常：</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-success.png" alt="img"></p>
+<h1 id="2、goaccess使用"><a href="#2、goaccess使用" class="headerlink" title="2、goaccess使用"></a>2、goaccess使用</h1><p>测试生成页面</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goaccess access.log -o report.html --<span class="built_in">log</span>-format=COMBINED</span><br></pre></td></tr></table></figure>
+<p>实时生成数据到goaccess页面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oaccess access.log -o /var/www/html/report.html --log-format=COMBINED --real-time-html</span><br></pre></td></tr></table></figure>
+<p>后台实时生成数据到goaccess页面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goaccess /var/log/nginx/access.log -o /usr/local/ieternal/nH-frontend/goacces-out/website/real-time.html --real-time-html --daemonize</span><br></pre></td></tr></table></figure>
+<h1 id="使用后台需要指定全路径"><a href="#使用后台需要指定全路径" class="headerlink" title="使用后台需要指定全路径"></a>使用后台需要指定全路径</h1><p>生成完html文件后可以发布到ngnix，即可访问</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess.png" alt="img"></p>
+<h1 id="3、更多使用"><a href="#3、更多使用" class="headerlink" title="3、更多使用"></a>3、更多使用</h1><p><a href="https://github.com/allinurl/goaccess/" target="_blank" rel="noopener">https://github.com/allinurl/goaccess/</a></p>
+
       
 
       
@@ -345,7 +282,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/11/12/goaccess分析ngnix的accesslog日志/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -359,18 +296,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/11/12/goaccess分析ngnix的accesslog日志/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          goaccess分析ngnix的accesslog日志
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/11/09/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
+    <a href="/2018/11/09/使用Hexo+Github一步步搭建属于自己的博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用Hexo+Github一步步搭建属于自己的博客</div>
       <i class="icon-circle-right"></i>
     </a>
   

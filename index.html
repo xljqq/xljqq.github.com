@@ -152,6 +152,92 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-goaccess分析ngnix的accesslog日志" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/12/goaccess分析ngnix的accesslog日志/">goaccess分析ngnix的accesslog日志</a>
+    </h1>
+  
+
+        
+        <a href="/2018/11/12/goaccess分析ngnix的accesslog日志/" class="archive-article-date">
+  	<time datetime="2018-11-12T08:17:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、安装goaccess"><a href="#1、安装goaccess" class="headerlink" title="1、安装goaccess"></a>1、安装goaccess</h1><p>安装goacess的一些支持库，如果后面操作出现问题，很有可能是因为某些库位安装，主要包括：glib2,glib2-devel,geoip,geoip-devel,ncurses-devel,zlib,zlib-devel,gcc。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install glib2 glib2-devel GeoIP-devel  ncurses-devel zlib zlib-devel</span><br><span class="line">yum install gcc -y</span><br></pre></td></tr></table></figure>
+<p>如果是一键安装，注意安装过程中的提示，哪些未安装成功，需要单独安装，比如我在本地操作时，ncurses-devle、zlib、zlib-devel默认已安装，geo-ip就未安装成功，需要单独安装。</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/geo-ip.png" alt="img"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.6.tar.gz</span><br><span class="line">wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz</span><br><span class="line"></span><br><span class="line">tar -xzvf GeoIP-1.4.6.tar.gz</span><br><span class="line">cd GeoIP-1.4.6</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line">cd ..</span><br><span class="line">mv GeoIP.dat.gz /usr/local/share/GeoIP/</span><br></pre></td></tr></table></figure>
+<p>接下来我们就可以安装goaccess了，这里我是用的编译安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget http://tar.goaccess.io/goaccess-0.8.1.tar.gz</span><br><span class="line">tar -xzvf goaccess-0.8.1.tar.gz</span><br><span class="line">cd goaccess-0.8.1/</span><br><span class="line">./configure --enable-geoip --enable-utf8</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>运行goaccess命令查看是否安装成功，结果我在本地安装时提示下面错误：</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-error.png" alt="img"></p>
+<p>32位系统使用下面命令解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/lib/libGeoIP.so* /lib/</span><br></pre></td></tr></table></figure>
+<p>64位系统尝试使用下面命令解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/lib/libGeoIP.so* /lib64/</span><br></pre></td></tr></table></figure>
+<p>再运行goaccess命令正常：</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess-success.png" alt="img"></p>
+<h1 id="2、goaccess使用"><a href="#2、goaccess使用" class="headerlink" title="2、goaccess使用"></a>2、goaccess使用</h1><p>测试生成页面</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goaccess access.log -o report.html --<span class="built_in">log</span>-format=COMBINED</span><br></pre></td></tr></table></figure>
+<p>实时生成数据到goaccess页面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oaccess access.log -o /var/www/html/report.html --log-format=COMBINED --real-time-html</span><br></pre></td></tr></table></figure>
+<p>后台实时生成数据到goaccess页面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goaccess /var/log/nginx/access.log -o /usr/local/ieternal/nH-frontend/goacces-out/website/real-time.html --real-time-html --daemonize</span><br></pre></td></tr></table></figure>
+<h1 id="使用后台需要指定全路径"><a href="#使用后台需要指定全路径" class="headerlink" title="使用后台需要指定全路径"></a>使用后台需要指定全路径</h1><p>生成完html文件后可以发布到ngnix，即可访问</p>
+<p><img src="/2018/11/12/goaccess分析ngnix的accesslog日志/goaccess.png" alt="img"></p>
+<h1 id="3、更多使用"><a href="#3、更多使用" class="headerlink" title="3、更多使用"></a>3、更多使用</h1><p><a href="https://github.com/allinurl/goaccess/" target="_blank" rel="noopener">https://github.com/allinurl/goaccess/</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/11/12/goaccess分析ngnix的accesslog日志/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-使用Hexo+Github一步步搭建属于自己的博客" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     

@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="https://xljqq.github.com">
   <title>离线环境下安装logstash插件 | xljqq的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包已">
+  <meta name="description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加 1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="离线环境下安装logstash插件">
 <meta property="og:url" content="https://xljqq.github.com/2018/11/14/离线环境下安装logstash插件/index.html">
 <meta property="og:site_name" content="xljqq的博客">
-<meta property="og:description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包已">
+<meta property="og:description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加 1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-14T02:02:44.942Z">
+<meta property="og:updated_time" content="2018-11-14T02:05:31.960Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="离线环境下安装logstash插件">
-<meta name="twitter:description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包已">
+<meta name="twitter:description" content="1、在线环境下安装插件安装ruby环境 12yum install rubyyum install rubygems 修改源为淘宝（需要的话） 1vim logstash-xxx/Gemfile 追加 1source &quot;&amp;lt;https://ruby.taobao.org/&amp;gt;&quot; 安装插件 1./logstash-plugin install logstash-input-jdbc 2、打包">
   
     <link rel="alternative" href="/atom.xml" title="xljqq的博客" type="application/atom+xml">
   
@@ -178,7 +178,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install ruby</span><br><span class="line">yum install rubygems</span><br></pre></td></tr></table></figure>
 <p>修改源为淘宝（需要的话）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim logstash-xxx/Gemfile</span><br></pre></td></tr></table></figure>
-<h1 id="追加"><a href="#追加" class="headerlink" title="追加"></a>追加</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source "&lt;https://ruby.taobao.org/&gt;"</span><br></pre></td></tr></table></figure>
+<p>追加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source "&lt;https://ruby.taobao.org/&gt;"</span><br></pre></td></tr></table></figure>
 <p>安装插件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-plugin install logstash-input-jdbc</span><br></pre></td></tr></table></figure>
 <h1 id="2、打包已安装插件"><a href="#2、打包已安装插件" class="headerlink" title="2、打包已安装插件"></a>2、打包已安装插件</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-plugin prepare-offline-pack --overwrite --output logstash-input-jdbc-4.2.3.zip logstash-input-jdbc</span><br></pre></td></tr></table></figure>
@@ -186,7 +187,7 @@
 <h1 id="3、离线安装插件"><a href="#3、离线安装插件" class="headerlink" title="3、离线安装插件"></a>3、离线安装插件</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-plugin install file:///data/elk/logstash-input-jdbc-4.2.3.zip</span><br></pre></td></tr></table></figure>
 <p>其他方式如下：</p>
 <h1 id="4、直接下载插件"><a href="#4、直接下载插件" class="headerlink" title="4、直接下载插件"></a>4、直接下载插件</h1><p>从<a href="https://rubygems.org/下载插件，gems仓库直接下载xxx.gems库" target="_blank" rel="noopener">https://rubygems.org/下载插件，gems仓库直接下载xxx.gems库</a></p>
-<h1 id="5、wget下载-本地编译"><a href="#5、wget下载-本地编译" class="headerlink" title="5、wget下载,本地编译"></a>5、wget下载,本地编译</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="5、wget下载-本地编译"><a href="#5、wget下载-本地编译" class="headerlink" title="5、wget下载,本地编译"></a>5、wget下载,本地编译</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/logstash-plugins/logstash-input-kafka</span><br><span class="line">unzip master</span><br><span class="line">cd logstash-input-kafka-master</span><br><span class="line">gem build xxx.gemspec</span><br></pre></td></tr></table></figure>
 <p>生成gem</p>
 <h1 id="6、安装gem插件"><a href="#6、安装gem插件" class="headerlink" title="6、安装gem插件"></a>6、安装gem插件</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-plugin install file:///data/elk/xxx.gem</span><br></pre></td></tr></table></figure>
 

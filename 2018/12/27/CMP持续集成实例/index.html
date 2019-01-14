@@ -6,21 +6,42 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://xljqq.github.com">
-  <title>使用goaccess分析kong的access日志 | xljqq的博客</title>
+  <title>CMP持续集成实例 | xljqq的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
+  <meta name="description" content="三维联动-倒三角持续集成实例1、环境准备1.1、主机准备   准备项目 项目内容     编译主机地址 10.20.16.203   编译主机用户名 aicompile   编译主机密码 XXXXXX   编译主机具备环境 git、java、maven、node   制品仓储主机地址 10.20.16.203   制品仓储主机用户名 aistore   制品仓储主机密码 XXXXXX   部署主机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用goaccess分析kong的access日志">
-<meta property="og:url" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/index.html">
+<meta property="og:title" content="CMP持续集成实例">
+<meta property="og:url" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/index.html">
 <meta property="og:site_name" content="xljqq的博客">
-<meta property="og:description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
+<meta property="og:description" content="三维联动-倒三角持续集成实例1、环境准备1.1、主机准备   准备项目 项目内容     编译主机地址 10.20.16.203   编译主机用户名 aicompile   编译主机密码 XXXXXX   编译主机具备环境 git、java、maven、node   制品仓储主机地址 10.20.16.203   制品仓储主机用户名 aistore   制品仓储主机密码 XXXXXX   部署主机">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png">
-<meta property="og:updated_time" content="2018-11-14T01:09:41.570Z">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build3.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build4.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build5.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build6.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build8.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build9.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build13.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build14.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build15.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build10.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build11.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build12.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-h5-build1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-h5-build2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-h5-build3.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-h5-build4.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-h5-build5.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/kong1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/kong2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd1.png">
+<meta property="og:updated_time" content="2019-01-02T09:28:17.064Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用goaccess分析kong的access日志">
-<meta name="twitter:description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
-<meta name="twitter:image" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png">
+<meta name="twitter:title" content="CMP持续集成实例">
+<meta name="twitter:description" content="三维联动-倒三角持续集成实例1、环境准备1.1、主机准备   准备项目 项目内容     编译主机地址 10.20.16.203   编译主机用户名 aicompile   编译主机密码 XXXXXX   编译主机具备环境 git、java、maven、node   制品仓储主机地址 10.20.16.203   制品仓储主机用户名 aistore   制品仓储主机密码 XXXXXX   部署主机">
+<meta name="twitter:image" content="https://xljqq.github.com/2018/12/27/CMP持续集成实例/sd-build1.png">
   
     <link rel="alternative" href="/atom.xml" title="xljqq的博客" type="application/atom+xml">
   
@@ -156,33 +177,259 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-使用goaccess分析kong的access日志" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-CMP持续集成实例" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      使用goaccess分析kong的access日志
+      CMP持续集成实例
     </h1>
   
 
         
-        <a href="/2018/11/14/使用goaccess分析kong的access日志/" class="archive-article-date">
-  	<time datetime="2018-11-14T00:46:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-14</time>
+        <a href="/2018/12/27/CMP持续集成实例/" class="archive-article-date">
+  	<time datetime="2018-12-27T07:08:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1、方案1"><a href="#1、方案1" class="headerlink" title="1、方案1"></a>1、方案1</h1><p>直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log</p>
-<p>此方案可参照分析ngnix的日志，操作一致。</p>
-<h1 id="2、方案2"><a href="#2、方案2" class="headerlink" title="2、方案2"></a>2、方案2</h1><p>针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。</p>
-<h2 id="2-1、logstash配置"><a href="#2-1、logstash配置" class="headerlink" title="2.1、logstash配置"></a>2.1、logstash配置</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    tcp &#123;</span><br><span class="line">      type =&gt; <span class="string">"kong"</span></span><br><span class="line">      port =&gt; <span class="number">6045</span></span><br><span class="line">      mode =&gt; <span class="string">"server"</span></span><br><span class="line">      codec =&gt; json</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter&#123;</span><br><span class="line">   <span class="keyword">if</span> [type] == <span class="string">"kong"</span> &#123;</span><br><span class="line">    json&#123;</span><br><span class="line">        source =&gt; <span class="string">"message"</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     ruby&#123;</span><br><span class="line">        code =&gt; <span class="string">'event.set("accesslog",event.get("client_ip")+" - - ["+Time.at(event.get("started_at")/1000).strftime("%d/%b/%Y:%H:%M:%S +0000")+"] \""+event.get("request[method]")+" "+ event.get("request[uri]")+" HTTP/1.1\" "+event.get("response[status]").to_s+" "+event.get("response[size]").to_s+" \""+event.get("request[headers]")["referer"].to_s+"\" \""+event.get("request[headers]")["user-agent"]+"\"")'</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">   stdout&#123;</span><br><span class="line">        codec=&gt; line &#123; format =&gt; <span class="string">"%&#123;accesslog&#125;"</span>&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  file &#123;</span><br><span class="line">   path =&gt; <span class="string">"/data/kong/log/access.log"</span></span><br><span class="line">   codec =&gt; line &#123; format =&gt; <span class="string">"%&#123;accesslog&#125;"</span>&#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后启动logstash</p>
-<h2 id="2-2、kong插件配置"><a href="#2-2、kong插件配置" class="headerlink" title="2.2、kong插件配置"></a>2.2、kong插件配置</h2><p><img src="/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png" alt="img"></p>
-<h2 id="2-3、goaccess部署"><a href="#2-3、goaccess部署" class="headerlink" title="2.3、goaccess部署"></a>2.3、goaccess部署</h2><p>对生成的文件进行分析，后面步骤与方案1一致。</p>
+        <h1 id="三维联动-倒三角持续集成实例"><a href="#三维联动-倒三角持续集成实例" class="headerlink" title="三维联动-倒三角持续集成实例"></a>三维联动-倒三角持续集成实例</h1><h2 id="1、环境准备"><a href="#1、环境准备" class="headerlink" title="1、环境准备"></a>1、环境准备</h2><h3 id="1-1、主机准备"><a href="#1-1、主机准备" class="headerlink" title="1.1、主机准备"></a>1.1、主机准备</h3><table>
+<thead>
+<tr>
+<th>准备项目</th>
+<th>项目内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编译主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>编译主机用户名</td>
+<td>aicompile</td>
+</tr>
+<tr>
+<td>编译主机密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>编译主机具备环境</td>
+<td>git、java、maven、node</td>
+</tr>
+<tr>
+<td>制品仓储主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>制品仓储主机用户名</td>
+<td>aistore</td>
+</tr>
+<tr>
+<td>制品仓储主机密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>部署主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>部署主机用户名</td>
+<td>aideploy</td>
+</tr>
+<tr>
+<td>部署主机密码</td>
+<td>XXXXXXX</td>
+</tr>
+<tr>
+<td>docker主机地址</td>
+<td>10.20.52.154</td>
+</tr>
+<tr>
+<td>docker主机用户名</td>
+<td>root</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-2、规范"><a href="#1-2、规范" class="headerlink" title="1.2、规范"></a>1.2、规范</h3><ul>
+<li><p>代码提交，必须要按照<strong>[</strong> <strong>@dmp编号@提交内容@自定义内容</strong> <strong>]</strong>这种格式进行提交，否则无法构建</p>
+</li>
+<li><p>配置性文件不能写死，需要区分环境，以<strong>环境变量</strong>的形式或者<strong>入参</strong>的形式</p>
+<p>如spring boot的application.properties文件，可以配置多个环境的配置</p>
+<p>h5页面调用api服务的地址</p>
+<p>部署完毕后，api和h5都必须在kong上进行配置，通过kong进行代理。</p>
+</li>
+<li><p>编译的代码路径：/data3/css-sourcecode</p>
+</li>
+<li><p>归档的路径：/data3/aistore</p>
+</li>
+<li><p>部署路径：/data3/deploy</p>
+</li>
+<li><p>docker打包路径：/root/css-docker</p>
+</li>
+</ul>
+<h2 id="2、倒三角SD服务构建流程"><a href="#2、倒三角SD服务构建流程" class="headerlink" title="2、倒三角SD服务构建流程"></a>2、倒三角SD服务构建流程</h2><h3 id="2-1、开始构建邮件通知"><a href="#2-1、开始构建邮件通知" class="headerlink" title="2.1、开始构建邮件通知"></a>2.1、开始构建邮件通知</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build1.png" alt="image"></p>
+<h3 id="2-2、构建代码分支合并"><a href="#2-2、构建代码分支合并" class="headerlink" title="2.2、构建代码分支合并"></a>2.2、构建代码分支合并</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build2.png" alt="image"></p>
+<h3 id="2-3、构建代码打包归档"><a href="#2-3、构建代码打包归档" class="headerlink" title="2.3、构建代码打包归档"></a>2.3、构建代码打包归档</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build3.png" alt="image"></p>
+<p>build.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$2</span><br><span class="line">GROUP_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone https://git用户名:git密码@gitlab.asiainfo.com/$&#123;GROUP_NAME&#125;/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mvn clean package &gt;&gt; "$LOG" 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GROUP_NAME($1)</td>
+<td>第一个参数：代码所在分组名</td>
+</tr>
+<tr>
+<td>PROJECT_NAME($2)</td>
+<td>第二个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> cd /data3/css-sourcecode/bin/</span><br><span class="line">./build.sh ctc-datadevdeliver-wmc sd</span><br></pre></td></tr></table></figure>
+<h3 id="2-4、构建docker镜像"><a href="#2-4、构建docker镜像" class="headerlink" title="2.4、构建docker镜像"></a>2.4、构建docker镜像</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build4.png" alt="image"></p>
+<p>build.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line"></span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">cd $&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.war</span><br><span class="line"></span><br><span class="line">sshpass -p aicompile@123 scp aicompile@10.20.16.203:/data3/css-sourcecode/$&#123;PROJECT_NAME&#125;/target/$&#123;PROJECT_NAME&#125;.war .</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.tar</span><br><span class="line"></span><br><span class="line">docker build -t $&#123;PROJECT_NAME&#125;:$&#123;TAG&#125; .</span><br><span class="line"></span><br><span class="line">docker save -o $&#123;PROJECT_NAME&#125;.tar $&#123;PROJECT_NAME&#125;:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /root/css-docker/bin</span><br><span class="line">./build.sh sd</span><br></pre></td></tr></table></figure>
+<h3 id="2-5、构建结束邮件通知"><a href="#2-5、构建结束邮件通知" class="headerlink" title="2.5、构建结束邮件通知"></a>2.5、构建结束邮件通知</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build5.png" alt="image"></p>
+<h2 id="3、倒三角SD服务部署流程"><a href="#3、倒三角SD服务部署流程" class="headerlink" title="3、倒三角SD服务部署流程"></a>3、倒三角SD服务部署流程</h2><h3 id="3-1、环境管理-SD服务停止"><a href="#3-1、环境管理-SD服务停止" class="headerlink" title="3.1、环境管理-SD服务停止"></a>3.1、环境管理-SD服务停止</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build6.png" alt="image"></p>
+<p>run-server.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JVMFLAGS JVM参数可以在这里设置</span></span><br><span class="line">JVMFLAGS=-Dfile.encoding=UTF-8</span><br><span class="line"></span><br><span class="line">SERVER_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">SERVER_HOME="$(dirname "$&#123;SERVER_HOME&#125;")"</span><br><span class="line">SERVER_HOME="$(cd "$&#123;SERVER_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">if [ "$JAVA_HOME" != "" ]; then</span><br><span class="line">  JAVA="$JAVA_HOME/bin/java"</span><br><span class="line">else</span><br><span class="line">  JAVA=java</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">mkdir -p $SERVER_HOME/../logs</span><br><span class="line">mkdir -p $SERVER_HOME/../pid</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 转化为绝对路径</span></span><br><span class="line">SERVER_MAIN="$SERVER_HOME/../lib/sd.war"</span><br><span class="line"></span><br><span class="line">SERVER_PID_FILE="$SERVER_HOME/../pid/server.pid"</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">start)</span><br><span class="line">    echo "Starting SERVER... "</span><br><span class="line">    if [ -f "$SERVER_PID_FILE" ]; then</span><br><span class="line">      if kill -0 `cat "$SERVER_PID_FILE"` &gt; /dev/null 2&gt;&amp;1; then</span><br><span class="line">         echo $command already running as process `cat "$SERVER_PID_FILE"`.</span><br><span class="line">         exit 0</span><br><span class="line">      fi</span><br><span class="line">fi</span><br><span class="line">            "$JAVA" -jar $JVMFLAGS $SERVER_MAIN --server.port=9000 &gt; $SERVER_HOME/../logs/css.log &amp;</span><br><span class="line"></span><br><span class="line">    if [ $? -eq 0 ]</span><br><span class="line">    then</span><br><span class="line">      if /bin/echo -n $! &gt; "$SERVER_PID_FILE"</span><br><span class="line">      then</span><br><span class="line">        sleep 1</span><br><span class="line">        echo "STARTED"</span><br><span class="line">      else</span><br><span class="line">        echo "FAILED TO WRITE PID"</span><br><span class="line">        exit 1</span><br><span class="line">      fi</span><br><span class="line">    else</span><br><span class="line">      echo "SERVER DID NOT START"</span><br><span class="line">      exit 1</span><br><span class="line">    fi</span><br><span class="line">;;</span><br><span class="line">restart)</span><br><span class="line">    sh $0 stop</span><br><span class="line">    sleep 3</span><br><span class="line">    sh $0 start</span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">    echo "Stopping SERVER ... "</span><br><span class="line">    if [ ! -f "$SERVER_PID_FILE" ]</span><br><span class="line">    then</span><br><span class="line">      echo "no server to stop (could not find file $SERVER_PID_FILE)"</span><br><span class="line">    else</span><br><span class="line">      kill -9 $(cat "$SERVER_PID_FILE")</span><br><span class="line">      rm "$SERVER_PID_FILE"</span><br><span class="line">       echo "STOPPED"</span><br><span class="line">    fi</span><br><span class="line">    exit 0</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">    echo "Usage: $0 &#123;start|stop|restart&#125;" &gt;&amp;2</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>执行脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/data3/deploy/sd/bin/run-server.sh stop</span><br></pre></td></tr></table></figure>
+<h3 id="3-2、环境管理-SD服务更新"><a href="#3-2、环境管理-SD服务更新" class="headerlink" title="3.2、环境管理-SD服务更新"></a>3.2、环境管理-SD服务更新</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build8.png" alt="image"></p>
+<p>如果需要中间处理更新包，可以在shell脚本中编写执行脚本。如h5打出的tar.gz压缩包，需要现解压，然后将解压的文件拷贝至web服务中。</p>
+<h3 id="3-3、环境管理-SD服务启动"><a href="#3-3、环境管理-SD服务启动" class="headerlink" title="3.3、环境管理-SD服务启动"></a>3.3、环境管理-SD服务启动</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build9.png" alt="image"></p>
+<p>脚本同执行停止的脚本，启动执行脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /data3/deploy/sd/bin/ &amp;&amp; ./run-server.sh start</span><br></pre></td></tr></table></figure>
+<h3 id="3-4、环境管理-SD服务停止（docker）"><a href="#3-4、环境管理-SD服务停止（docker）" class="headerlink" title="3.4、环境管理-SD服务停止（docker）"></a>3.4、环境管理-SD服务停止（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build13.png" alt="image"></p>
+<p>docker停止容器脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CONTAINER_ID=`docker ps -s |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker stop $CONTAINER_ID</span><br><span class="line">fi</span><br><span class="line">CONTAINER_ID=`docker ps -a |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker rm $CONTAINER_ID</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：镜像名称，如sd:latest</td>
+</tr>
+</tbody>
+</table>
+<p>执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/css-docker/bin/stop.sh h5:latest</span><br></pre></td></tr></table></figure>
+<h3 id="3-5、环境管理-SD服务更新（docker）"><a href="#3-5、环境管理-SD服务更新（docker）" class="headerlink" title="3.5、环境管理-SD服务更新（docker）"></a>3.5、环境管理-SD服务更新（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build14.png" alt="image"></p>
+<p>docker镜像更新脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker image rm sd:latest</span><br><span class="line">cd /root/images-local</span><br><span class="line">docker load -i sd.tar</span><br><span class="line">rm -rf sd.tar</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line">docker tag sd:latest sd:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-6、环境管理-SD服务启动（docker）"><a href="#3-6、环境管理-SD服务启动（docker）" class="headerlink" title="3.6、环境管理-SD服务启动（docker）"></a>3.6、环境管理-SD服务启动（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build15.png" alt="image"></p>
+<h3 id="3-7、倒三角SD服务部署流程-停止服务"><a href="#3-7、倒三角SD服务部署流程-停止服务" class="headerlink" title="3.7、倒三角SD服务部署流程-停止服务"></a>3.7、倒三角SD服务部署流程-停止服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build10.png" alt="image"></p>
+<h3 id="3-8、倒三角SD服务部署流程-更新服务"><a href="#3-8、倒三角SD服务部署流程-更新服务" class="headerlink" title="3.8、倒三角SD服务部署流程-更新服务"></a>3.8、倒三角SD服务部署流程-更新服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build11.png" alt="image"></p>
+<h3 id="3-9、倒三角SD服务部署流程-启动服务"><a href="#3-9、倒三角SD服务部署流程-启动服务" class="headerlink" title="3.9、倒三角SD服务部署流程-启动服务"></a>3.9、倒三角SD服务部署流程-启动服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build12.png" alt="image"></p>
+<h2 id="4、倒三角H5前端构建流程"><a href="#4、倒三角H5前端构建流程" class="headerlink" title="4、倒三角H5前端构建流程"></a>4、倒三角H5前端构建流程</h2><h3 id="4-1、邮件通知"><a href="#4-1、邮件通知" class="headerlink" title="4.1、邮件通知"></a>4.1、邮件通知</h3><p>与SD服务构建一致，详见SD服务构建邮件通知。</p>
+<h3 id="4-2、H5构建打包"><a href="#4-2、H5构建打包" class="headerlink" title="4.2、H5构建打包"></a>4.2、H5构建打包</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build1.png" alt="image"></p>
+<p>build-h5.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$2</span><br><span class="line"></span><br><span class="line">GROUP_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build-h5.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone https://xilj:a8803272D@gitlab.asiainfo.com/$&#123;GROUP_NAME&#125;/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">rm -rf build</span><br><span class="line"></span><br><span class="line">rm -rf build-h5</span><br><span class="line">mkdir -p $SOURCE_HOME/build-h5</span><br><span class="line"></span><br><span class="line">npm i  &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">npm run build &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">cd $SOURCE_HOME/build</span><br><span class="line"></span><br><span class="line">tar -zcvf  $&#123;PROJECT_NAME&#125;.tar.gz .</span><br><span class="line"></span><br><span class="line">mv $&#123;PROJECT_NAME&#125;.tar.gz $SOURCE_HOME/build-h5/</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GROUP_NAME($1)</td>
+<td>第一个参数：代码所在分组名</td>
+</tr>
+<tr>
+<td>PROJECT_NAME($2)</td>
+<td>第二个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> cd /data3/css-sourcecode/bin/</span><br><span class="line">./build-h5.sh ctc-datadevdeliver-ued worktool-app-sd-h5</span><br></pre></td></tr></table></figure>
+<h3 id="4-3、H5-docker镜像构建"><a href="#4-3、H5-docker镜像构建" class="headerlink" title="4.3、H5 docker镜像构建"></a>4.3、H5 docker镜像构建</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build2.png" alt="image"></p>
+<p>build-h5镜像脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">v_time=`date <span class="string">"+%Y-%m-%d %H:%M:%S"</span>`</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">TAG=`date -d <span class="string">"<span class="variable">$v_time</span>"</span> +%Y%m%d%H%M`</span></span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">cd $&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.war</span><br><span class="line"></span><br><span class="line">sshpass -p aicompile@123 scp aicompile@10.20.16.203:/data3/css-sourcecode/$&#123;PROJECT_NAME&#125;/build-h5/worktool-app-sd-h5.tar.gz .</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.tar</span><br><span class="line"></span><br><span class="line">docker build -t $&#123;PROJECT_NAME&#125;:latest .</span><br><span class="line"></span><br><span class="line">docker save -o $&#123;PROJECT_NAME&#125;.tar $&#123;PROJECT_NAME&#125;:latest</span><br><span class="line"></span><br><span class="line">docker image rm $&#123;PROJECT_NAME&#125;:latest</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /root/css-docker/bin</span><br><span class="line">./build.sh sd</span><br></pre></td></tr></table></figure>
+<h2 id="5、倒三角SD-H5应用部署流程"><a href="#5、倒三角SD-H5应用部署流程" class="headerlink" title="5、倒三角SD-H5应用部署流程"></a>5、倒三角SD-H5应用部署流程</h2><h3 id="5-1、环境管理-SD-H5应用停止（docker）"><a href="#5-1、环境管理-SD-H5应用停止（docker）" class="headerlink" title="5.1、环境管理-SD-H5应用停止（docker）"></a>5.1、环境管理-SD-H5应用停止（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build3.png" alt="image"></p>
+<p>stop.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CONTAINER_ID=`docker ps -s |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker stop $CONTAINER_ID</span><br><span class="line">fi</span><br><span class="line">CONTAINER_ID=`docker ps -a |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker rm $CONTAINER_ID</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：镜像名称，如sd:latest</td>
+</tr>
+</tbody>
+</table>
+<p>执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/css-docker/bin/stop.sh worktool-app-sd-h5:latest</span><br></pre></td></tr></table></figure>
+<h3 id="5-2、环境管理-SD-H5应用更新（docker）"><a href="#5-2、环境管理-SD-H5应用更新（docker）" class="headerlink" title="5.2、环境管理-SD-H5应用更新（docker）"></a>5.2、环境管理-SD-H5应用更新（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build4.png" alt="image"></p>
+<p>更新脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker image rm worktool-app-sd-h5:latest</span><br><span class="line">cd /root/images-local</span><br><span class="line">docker load -i worktool-app-sd-h5.tar</span><br><span class="line">rm -rf worktool-app-sd-h5.tar</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line">docker tag worktool-app-sd-h5:latest worktool-app-sd-h5:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-3、环境管理-SD-H5应用启动（docker）"><a href="#5-3、环境管理-SD-H5应用启动（docker）" class="headerlink" title="5.3、环境管理-SD-H5应用启动（docker）"></a>5.3、环境管理-SD-H5应用启动（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build5.png" alt="image"></p>
+<h3 id="5-4、SD-H5应用部署流程构建"><a href="#5-4、SD-H5应用部署流程构建" class="headerlink" title="5.4、SD-H5应用部署流程构建"></a>5.4、SD-H5应用部署流程构建</h3><p>因为配置固定，可参见 倒三角SD服务部署流程 章节：3.7、3.8、3.9.</p>
+<h2 id="6、网关配置"><a href="#6、网关配置" class="headerlink" title="6、网关配置"></a>6、网关配置</h2><h3 id="6-1、SD-H5配置"><a href="#6-1、SD-H5配置" class="headerlink" title="6.1、SD-H5配置"></a>6.1、SD-H5配置</h3><p><img src="/2018/12/27/CMP持续集成实例/kong1.png" alt="image"></p>
+<h3 id="6-2、SD-API配置"><a href="#6-2、SD-API配置" class="headerlink" title="6.2、SD-API配置"></a>6.2、SD-API配置</h3><p><img src="/2018/12/27/CMP持续集成实例/kong2.png" alt="image"></p>
+<h3 id="6-3、访问"><a href="#6-3、访问" class="headerlink" title="6.3、访问"></a>6.3、访问</h3><p><a href="http://10.20.52.154:16010/pages/sd/index.html?phone=15335175201&amp;auth=1&amp;latnid=250#/taskpool" target="_blank" rel="noopener">http://10.20.52.154:16010/pages/sd/index.html?phone=15335175201&amp;auth=1&amp;latnid=250#/taskpool</a></p>
+<p><img src="/2018/12/27/CMP持续集成实例/sd1.png" alt="image"></p>
 
       
 
@@ -262,7 +509,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/12/27/CMP持续集成实例/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -276,18 +523,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/11/14/docker中使用goaccess分析kong的access日志/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/01/04/FastDFS5-X-Nginx安装部署手册/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          docker中使用goaccess分析kong的access日志
+          FastDFS5.X+Nginx安装部署手册
         
       </div>
     </a>
   
   
-    <a href="/2018/11/12/goaccess分析ngnix的accesslog日志/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">goaccess分析ngnix的accesslog日志</div>
+    <a href="/2018/12/12/CMP构建部署集成/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CMP构建部署集成</div>
       <i class="icon-circle-right"></i>
     </a>
   

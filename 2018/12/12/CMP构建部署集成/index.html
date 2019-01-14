@@ -6,21 +6,50 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://xljqq.github.com">
-  <title>使用goaccess分析kong的access日志 | xljqq的博客</title>
+  <title>CMP构建部署集成 | xljqq的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
+  <meta name="description" content="CMP访问地址http://10.1.242.48:8830/ 用户名密码为公司NT账号密码 案例以http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。 1、准备环境   准备项目 项目内容     项目的命名 CSS-SMS   git仓库代码地址 http://10.20.16.203/xilj/css-sms.git   git用户名 xilj">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用goaccess分析kong的access日志">
-<meta property="og:url" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/index.html">
+<meta property="og:title" content="CMP构建部署集成">
+<meta property="og:url" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/index.html">
 <meta property="og:site_name" content="xljqq的博客">
-<meta property="og:description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
+<meta property="og:description" content="CMP访问地址http://10.1.242.48:8830/ 用户名密码为公司NT账号密码 案例以http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。 1、准备环境   准备项目 项目内容     项目的命名 CSS-SMS   git仓库代码地址 http://10.20.16.203/xilj/css-sms.git   git用户名 xilj">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png">
-<meta property="og:updated_time" content="2018-11-14T01:09:41.570Z">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/new-project.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/host.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/host-user.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/code-repo.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/git-setting.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/git-token-setting.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/git-token.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/git-project-id.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/git-branch.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/prod-store.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/interface-git.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/interface-git-setting.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/interface-dmp.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/email.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/build1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/build2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/build3.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/build4.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy3.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy4.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy5.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy6.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/deploy7.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/integration1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/email1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/sonar1.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/sonar2.png">
+<meta property="og:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/sonar.png">
+<meta property="og:updated_time" content="2018-12-13T10:29:46.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用goaccess分析kong的access日志">
-<meta name="twitter:description" content="1、方案1直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log 此方案可参照分析ngnix的日志，操作一致。 2、方案2针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。 2.1、logstash配">
-<meta name="twitter:image" content="https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png">
+<meta name="twitter:title" content="CMP构建部署集成">
+<meta name="twitter:description" content="CMP访问地址http://10.1.242.48:8830/ 用户名密码为公司NT账号密码 案例以http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。 1、准备环境   准备项目 项目内容     项目的命名 CSS-SMS   git仓库代码地址 http://10.20.16.203/xilj/css-sms.git   git用户名 xilj">
+<meta name="twitter:image" content="https://xljqq.github.com/2018/12/12/CMP构建部署集成/new-project.png">
   
     <link rel="alternative" href="/atom.xml" title="xljqq的博客" type="application/atom+xml">
   
@@ -156,33 +185,181 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-使用goaccess分析kong的access日志" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-CMP构建部署集成" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      使用goaccess分析kong的access日志
+      CMP构建部署集成
     </h1>
   
 
         
-        <a href="/2018/11/14/使用goaccess分析kong的access日志/" class="archive-article-date">
-  	<time datetime="2018-11-14T00:46:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-14</time>
+        <a href="/2018/12/12/CMP构建部署集成/" class="archive-article-date">
+  	<time datetime="2018-12-12T08:31:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1、方案1"><a href="#1、方案1" class="headerlink" title="1、方案1"></a>1、方案1</h1><p>直接分析kong的access.log文件，默认路径/usr/local/kong/logs/access.log</p>
-<p>此方案可参照分析ngnix的日志，操作一致。</p>
-<h1 id="2、方案2"><a href="#2、方案2" class="headerlink" title="2、方案2"></a>2、方案2</h1><p>针对kong集群，为了不在每一个节点上部署goaccess，可以使用kong的插件，将日志写到文件上，然后对新生成的文件进行日志分析。这里采用tcp-log插件+logstash来配合完成。</p>
-<h2 id="2-1、logstash配置"><a href="#2-1、logstash配置" class="headerlink" title="2.1、logstash配置"></a>2.1、logstash配置</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    tcp &#123;</span><br><span class="line">      type =&gt; <span class="string">"kong"</span></span><br><span class="line">      port =&gt; <span class="number">6045</span></span><br><span class="line">      mode =&gt; <span class="string">"server"</span></span><br><span class="line">      codec =&gt; json</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter&#123;</span><br><span class="line">   <span class="keyword">if</span> [type] == <span class="string">"kong"</span> &#123;</span><br><span class="line">    json&#123;</span><br><span class="line">        source =&gt; <span class="string">"message"</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     ruby&#123;</span><br><span class="line">        code =&gt; <span class="string">'event.set("accesslog",event.get("client_ip")+" - - ["+Time.at(event.get("started_at")/1000).strftime("%d/%b/%Y:%H:%M:%S +0000")+"] \""+event.get("request[method]")+" "+ event.get("request[uri]")+" HTTP/1.1\" "+event.get("response[status]").to_s+" "+event.get("response[size]").to_s+" \""+event.get("request[headers]")["referer"].to_s+"\" \""+event.get("request[headers]")["user-agent"]+"\"")'</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">   stdout&#123;</span><br><span class="line">        codec=&gt; line &#123; format =&gt; <span class="string">"%&#123;accesslog&#125;"</span>&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  file &#123;</span><br><span class="line">   path =&gt; <span class="string">"/data/kong/log/access.log"</span></span><br><span class="line">   codec =&gt; line &#123; format =&gt; <span class="string">"%&#123;accesslog&#125;"</span>&#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后启动logstash</p>
-<h2 id="2-2、kong插件配置"><a href="#2-2、kong插件配置" class="headerlink" title="2.2、kong插件配置"></a>2.2、kong插件配置</h2><p><img src="/2018/11/14/使用goaccess分析kong的access日志/kong-tcplog.png" alt="img"></p>
-<h2 id="2-3、goaccess部署"><a href="#2-3、goaccess部署" class="headerlink" title="2.3、goaccess部署"></a>2.3、goaccess部署</h2><p>对生成的文件进行分析，后面步骤与方案1一致。</p>
+        <h1 id="CMP访问地址"><a href="#CMP访问地址" class="headerlink" title="CMP访问地址"></a>CMP访问地址</h1><p><a href="http://10.1.242.48:8830/" target="_blank" rel="noopener">http://10.1.242.48:8830/</a></p>
+<p>用户名密码为公司NT账号密码</p>
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><p>以<a href="http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。" target="_blank" rel="noopener">http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。</a></p>
+<h2 id="1、准备环境"><a href="#1、准备环境" class="headerlink" title="1、准备环境"></a>1、准备环境</h2><table>
+<thead>
+<tr>
+<th>准备项目</th>
+<th>项目内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>项目的命名</td>
+<td>CSS-SMS</td>
+</tr>
+<tr>
+<td>git仓库代码地址</td>
+<td><a href="http://10.20.16.203/xilj/css-sms.git" target="_blank" rel="noopener">http://10.20.16.203/xilj/css-sms.git</a></td>
+</tr>
+<tr>
+<td>git用户名</td>
+<td>xilj</td>
+</tr>
+<tr>
+<td>git用户密码</td>
+<td>XXXXXXXX</td>
+</tr>
+<tr>
+<td>git分支</td>
+<td>master</td>
+</tr>
+<tr>
+<td>代码编译主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>代码编译主机用户名</td>
+<td>aiscm</td>
+</tr>
+<tr>
+<td>代码编译主机密码</td>
+<td>aiscm@123</td>
+</tr>
+<tr>
+<td>代码编译生成路径</td>
+<td>/data3/css-sourcecode/css-sms/target</td>
+</tr>
+<tr>
+<td>代码编译后的包名</td>
+<td>css-sms-0.0.1-SNAPSHOT.jar</td>
+</tr>
+<tr>
+<td>制品仓储主机</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>制品仓储用户名</td>
+<td>xxxx</td>
+</tr>
+<tr>
+<td>制品仓储密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>部署主机</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>部署路径</td>
+<td>/data3/deploy/css-sms/lib</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2、新建项目"><a href="#2、新建项目" class="headerlink" title="2、新建项目"></a>2、新建项目</h2><p><img src="/2018/12/12/CMP构建部署集成/new-project.png" alt="1544604784276"></p>
+<p>新建完项目后，在<strong>[任务管理]</strong>下会自动生成定时任务，定时任务的作用是同步git提交内容和dmp的需求。</p>
+<h2 id="3、主机管理"><a href="#3、主机管理" class="headerlink" title="3、主机管理"></a>3、主机管理</h2><p>配置主机服务器地址，以及使用的用户名、密码。包含编译主机、仓储主机。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/host.png" alt="image"></p>
+<p><img src="/2018/12/12/CMP构建部署集成/host-user.png" alt="image"></p>
+<h2 id="4、项目设置"><a href="#4、项目设置" class="headerlink" title="4、项目设置"></a>4、项目设置</h2><h3 id="代码仓储管理"><a href="#代码仓储管理" class="headerlink" title="代码仓储管理"></a>代码仓储管理</h3><p><img src="/2018/12/12/CMP构建部署集成/code-repo.png" alt="image"></p>
+<p>token设置注意事项，在高版本的gitlab中token为必须设置项，设置步骤：</p>
+<p>登录gitlab，进入user-settings</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-setting.png" alt="image"></p>
+<p>进入access tokens</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-token-setting.png" alt="image"></p>
+<p>获取token</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-token.png" alt="image"></p>
+<p>gitlab项目id的获取：进入该项目代码，选择Settings–General–General project settings</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-project-id.png" alt="image"></p>
+<p>建立分支</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-branch.png" alt="image"></p>
+<h3 id="制品仓储管理"><a href="#制品仓储管理" class="headerlink" title="制品仓储管理"></a>制品仓储管理</h3><p>新增制品仓储</p>
+<p><img src="/2018/12/12/CMP构建部署集成/prod-store.png" alt="image"></p>
+<p>配置信息包含主机地址，用户名，密码。</p>
+<h3 id="同步接口管理"><a href="#同步接口管理" class="headerlink" title="同步接口管理"></a>同步接口管理</h3><p>新增同步接口，接口分两级接口</p>
+<p>第一级：调用git hook push</p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-git.png" alt="image"></p>
+<p>备注分隔符为git提交备注信息的分割符，备注参数对应分割的内容的名称。</p>
+<p>提交的时候必须按格式@CTCODS_REQ_20181120_0003@自动化部署测试@自定义内容。否则CMP不识别提交的内容，不会进行构建。</p>
+<p>git hook配置，需要使用管理员账号登录，admin area–settings–Outbound requests进行勾选，否则无法调用git接口。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-git-setting.png" alt="image"></p>
+<p>第二级：调用dmp接口：<a href="http://192.168.15.21/OnlineServer/services/ProjectInfoWebService?wsdl" target="_blank" rel="noopener">http://192.168.15.21/OnlineServer/services/ProjectInfoWebService?wsdl</a></p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-dmp.png" alt="image"></p>
+<h2 id="5、邮箱服务配置"><a href="#5、邮箱服务配置" class="headerlink" title="5、邮箱服务配置"></a>5、邮箱服务配置</h2><p>配置邮件服务地址，用来在工作流执行过程中报警。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/email.png" alt="image"></p>
+<h2 id="6、构建工作流"><a href="#6、构建工作流" class="headerlink" title="6、构建工作流"></a>6、构建工作流</h2><p>配置构建的基本信息，给流程定义名称，流程类型选择构建类。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build1.png" alt="image"></p>
+<p>配置流程节点，点击 <strong>开始</strong> 后面的 <strong>+</strong> 号，包含节点名称、触发执行方式。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build2.png" alt="image"></p>
+<p>配置节点任务，合并分支</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build3.png" alt="image"></p>
+<p>新增代码构建节点，点击 <strong>开始</strong> 后面的 <strong>+</strong> 号，包含节点名称、触发执行方式。</p>
+<p>为代码构建配置执行任务</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build4.png" alt="image"></p>
+<p>包含编译主机、编译执行脚本、构建包的输出路径、输出包名、构建包归档的存储主机、存储路径。</p>
+<p>编译脚本如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone http://xilj:密码@10.20.16.203/xilj/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mvn clean package &gt;&gt; "$LOG" 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>遇到的坑，因为这两个坑，处理了很久。</p>
+<p>第一个：maven环境变量配置，需要配置在用户的.bashrc文件下，不能配置在.bash_profile下，否则CMP找不到mvn命令。</p>
+<p>第二个：仓储主机不能和编译主机在同一个主机用户下，否则上传不上去。</p>
+<p>apidoc文档生成脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/apidoc.log"</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc</span><br><span class="line"></span><br><span class="line">apidoc -i $&#123;PROJECT_NAME&#125; -o $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc  &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">cd $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc</span><br><span class="line"></span><br><span class="line">tar -zcvf  $&#123;PROJECT_NAME&#125;-apidoc.tar.gz .</span><br></pre></td></tr></table></figure>
+<h2 id="7、部署工作流"><a href="#7、部署工作流" class="headerlink" title="7、部署工作流"></a>7、部署工作流</h2><p>配置部署类工作流的时候需要先在<strong>[环境管理]</strong>中配置环境</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy1.png" alt="image"></p>
+<p>再点击环境，进入配置部署任务，目前配置三个任务，包含启动、停止、更新</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy2.png" alt="image"></p>
+<p>停止服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy3.png" alt="image"></p>
+<p>启动服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy4.png" alt="image"></p>
+<p>更新包服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy5.png" alt="image"></p>
+<p>此处如果涉及部署包的修改或者转移或者备份等中间操作，需要在shell脚本中配置执行的脚本。</p>
+<p>run-server.sh脚本如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JVMFLAGS JVM参数可以在这里设置</span></span><br><span class="line">JVMFLAGS=-Dfile.encoding=UTF-8</span><br><span class="line"></span><br><span class="line">SERVER_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">SERVER_HOME="$(dirname "$&#123;SERVER_HOME&#125;")"</span><br><span class="line">SERVER_HOME="$(cd "$&#123;SERVER_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">if [ "$JAVA_HOME" != "" ]; then</span><br><span class="line">  JAVA="$JAVA_HOME/bin/java"</span><br><span class="line">else</span><br><span class="line">  JAVA=java</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">mkdir -p $SERVER_HOME/../logs</span><br><span class="line">mkdir -p $SERVER_HOME/../pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 转化为绝对路径</span></span><br><span class="line"></span><br><span class="line">SERVER_MAIN=../lib/css-sms-0.0.1-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line">SERVER_PID_FILE="$SERVER_HOME/../pid/server.pid"</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">start)</span><br><span class="line">    echo "Starting SERVER... "</span><br><span class="line">    if [ -f "$SERVER_PID_FILE" ]; then</span><br><span class="line">      if kill -0 `cat "$SERVER_PID_FILE"` &gt; /dev/null 2&gt;&amp;1; then</span><br><span class="line">         echo $command already running as process `cat "$SERVER_PID_FILE"`.</span><br><span class="line">         exit 0</span><br><span class="line">      fi</span><br><span class="line">    fi</span><br><span class="line">    "$JAVA" -jar $JVMFLAGS $SERVER_MAIN --server.port=9000  &amp;</span><br><span class="line"></span><br><span class="line">        if [ $? -eq 0 ]</span><br><span class="line">    then</span><br><span class="line">      if /bin/echo -n $! &gt; "$SERVER_PID_FILE"</span><br><span class="line">      then</span><br><span class="line">        sleep 1</span><br><span class="line">        echo "STARTED"</span><br><span class="line">      else</span><br><span class="line">        echo "FAILED TO WRITE PID"</span><br><span class="line">        exit 1</span><br><span class="line">      fi</span><br><span class="line">    else</span><br><span class="line">      echo "SERVER DID NOT START"</span><br><span class="line">      exit 1</span><br><span class="line">    fi</span><br><span class="line">;;</span><br><span class="line">restart)</span><br><span class="line">    sh $0 stop</span><br><span class="line">    sleep 3</span><br><span class="line">    sh $0 start</span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">    echo "Stopping SERVER ... "</span><br><span class="line">    if [ ! -f "$SERVER_PID_FILE" ]</span><br><span class="line">    then</span><br><span class="line">      echo "no server to stop (could not find file $SERVER_PID_FILE)"</span><br><span class="line">    else</span><br><span class="line">      kill -9 $(cat "$SERVER_PID_FILE")</span><br><span class="line">      rm "$SERVER_PID_FILE"</span><br><span class="line">      echo "STOPPED"</span><br><span class="line">    fi</span><br><span class="line">    exit 0</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">    echo "Usage: $0 &#123;start|stop|restart&#125;" &gt;&amp;2</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>至此，完成部署的准备工作。</p>
+<p>配置部署工作流</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy6.png" alt="image"></p>
+<p>节点配置和执行任务都可参照构建，部署工作流的节点执行任务比构建类简单，因为都在环境里面配置好了。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy7.png" alt="image"></p>
+<p>部署任务直接关联环境中配置的任务即可。</p>
+<h2 id="8、集成工作流"><a href="#8、集成工作流" class="headerlink" title="8、集成工作流"></a>8、集成工作流</h2><p>主要将构建和部署进行串联，实现自动化。</p>
+<p>集成工作流配置与部署类一样，直接在节点任务中管理已经配置的构建和部署工作流。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/integration1.png" alt="image"></p>
+<h2 id="9、docker构建部署"><a href="#9、docker构建部署" class="headerlink" title="9、docker构建部署"></a>9、docker构建部署</h2><p>其构建方式与构建jar、war的方式一样，通过shell脚本完本，CMP帮助流程化执行任务。</p>
+<p>使用带有docker环境的主机地址，编写docker打包脚本，产出物则为save后的tar包。</p>
+<h2 id="10、邮箱通知"><a href="#10、邮箱通知" class="headerlink" title="10、邮箱通知"></a>10、邮箱通知</h2><p>在流程配置的开始和结束新增邮件通知任务</p>
+<p><img src="/2018/12/12/CMP构建部署集成/email1.png" alt="image"></p>
+<h2 id="11、cqm集成"><a href="#11、cqm集成" class="headerlink" title="11、cqm集成"></a>11、cqm集成</h2><p>访问地址：<a href="http://cqm.asiainfo.com/#/login" target="_blank" rel="noopener">http://cqm.asiainfo.com/#/login</a></p>
+<p>在工程管理中新增git仓库中的地址，审批通过后会开始进行代码扫描。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar1.png" alt="image"></p>
+<p>扫描完成后在<strong>常用查询</strong>–<strong>现存违规明细查询</strong>中查询违规等异常情况</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar2.png" alt="image"></p>
+<p>与CMP集成</p>
+<p>在构建工作流程中代码合并的时候新增sonar任务，配置cqm接口信息</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar.png" alt="image"></p>
 
       
 
@@ -262,7 +439,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/11/14/使用goaccess分析kong的access日志/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://xljqq.github.com/2018/12/12/CMP构建部署集成/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -276,18 +453,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/11/14/docker中使用goaccess分析kong的access日志/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/12/27/CMP持续集成实例/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          docker中使用goaccess分析kong的access日志
+          CMP持续集成实例
         
       </div>
     </a>
   
   
-    <a href="/2018/11/12/goaccess分析ngnix的accesslog日志/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">goaccess分析ngnix的accesslog日志</div>
+    <a href="/2018/11/14/离线环境下安装logstash插件/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">离线环境下安装logstash插件</div>
       <i class="icon-circle-right"></i>
     </a>
   

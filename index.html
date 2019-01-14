@@ -152,6 +152,677 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-FastDFS5-X-Nginx安装部署手册" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/04/FastDFS5-X-Nginx安装部署手册/">FastDFS5.X+Nginx安装部署手册</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/04/FastDFS5-X-Nginx安装部署手册/" class="archive-article-date">
+  	<time datetime="2019-01-04T02:51:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、环境准备"><a href="#1、环境准备" class="headerlink" title="1、环境准备"></a>1、环境准备</h1><h2 id="1-1、编译环境"><a href="#1-1、编译环境" class="headerlink" title="1.1、编译环境"></a>1.1、编译环境</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install git gcc gcc-c++ make automake autoconf libtool pcre pcre-devel zlib zlib-devel openssl-devel -y</span><br></pre></td></tr></table></figure>
+<h2 id="1-2、目录说明"><a href="#1-2、目录说明" class="headerlink" title="1.2、目录说明"></a>1.2、目录说明</h2><table>
+<thead>
+<tr>
+<th>说明</th>
+<th>目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>所有安装包</td>
+<td>/usr/local/src</td>
+</tr>
+<tr>
+<td>tracker跟踪服务器数据</td>
+<td>/home/fastdfs/tracker</td>
+</tr>
+<tr>
+<td>storage存储服务器数据</td>
+<td>/home/fastdfs/storage</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/fastdfs/tracker  #创建跟踪服务器数据目录</span><br><span class="line">mkdir -p /home/fastdfs/storage  #创建存储服务器数据目录</span><br><span class="line">cd /usr/local/src  #切换到安装目录准备下载安装包</span><br></pre></td></tr></table></figure>
+<h2 id="1-3、安装libfatscommon"><a href="#1-3、安装libfatscommon" class="headerlink" title="1.3、安装libfatscommon"></a>1.3、安装libfatscommon</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/happyfish100/libfastcommon.git --depth 1</span><br><span class="line">cd libfastcommon/</span><br><span class="line">./make.sh &amp;&amp; ./make.sh install</span><br></pre></td></tr></table></figure>
+<p>注意：如果出现<em>nm</em>: ‘/<em>usr</em>/<em>lib</em>/<em>libc_r</em>.<em>so</em>‘: <em>No such file</em>.异常，可以尝试新建一个sh脚本文件，然后将make.sh的内容粘贴到新建的脚本中，最后再执行以上命令。</p>
+<h2 id="1-4、安装FastDFS"><a href="#1-4、安装FastDFS" class="headerlink" title="1.4、安装FastDFS"></a>1.4、安装FastDFS</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/happyfish100/fastdfs.git --depth 1</span><br><span class="line">cd fastdfs/</span><br><span class="line">./make.sh &amp;&amp; ./make.sh install</span><br><span class="line"><span class="meta">#</span><span class="bash">配置文件准备</span></span><br><span class="line">cp /etc/fdfs/tracker.conf.sample /etc/fdfs/tracker.conf</span><br><span class="line">cp /etc/fdfs/storage.conf.sample /etc/fdfs/storage.conf</span><br><span class="line">cp /etc/fdfs/client.conf.sample /etc/fdfs/client.conf #客户端文件，测试用</span><br><span class="line">cp /usr/local/src/fastdfs/conf/http.conf /etc/fdfs/ #供nginx访问使用</span><br><span class="line">cp /usr/local/src/fastdfs/conf/mime.types /etc/fdfs/ #供nginx访问使用</span><br></pre></td></tr></table></figure>
+<p>注意：如果出现错误异常，可以尝试新建一个sh脚本文件，然后将make.sh的内容粘贴到新建的脚本中，最后再执行以上命令。</p>
+<h2 id="1-5、安装fastdfs-nginx-module"><a href="#1-5、安装fastdfs-nginx-module" class="headerlink" title="1.5、安装fastdfs-nginx-module"></a>1.5、安装fastdfs-nginx-module</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/happyfish100/fastdfs-nginx-module.git --depth 1</span><br><span class="line">cp /usr/local/src/fastdfs-nginx-module/src/mod_fastdfs.conf /etc/fdfs</span><br></pre></td></tr></table></figure>
+<h2 id="1-6、安装nginx"><a href="#1-6、安装nginx" class="headerlink" title="1.6、安装nginx"></a>1.6、安装nginx</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">wget http://nginx.org/download/nginx-1.15.8.tar.gz</span><br><span class="line">tar -zxvf nginx-1.15.8.tar.gz</span><br><span class="line">cd nginx-1.15.8/</span><br><span class="line"><span class="meta">#</span><span class="bash">添加fastdfs-nginx-module模块</span></span><br><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--pid-path=/var/local/nginx/nginx.pid \</span><br><span class="line">--lock-path=/var/lock/nginx/nginx.lock \</span><br><span class="line">--error-log-path=/var/log/nginx/error.log \</span><br><span class="line">--http-log-path=/var/log/nginx/access.log \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--http-client-body-temp-path=/var/temp/nginx/client \</span><br><span class="line">--http-proxy-temp-path=/var/temp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \</span><br><span class="line">--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/var/temp/nginx/scgi \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--with-http_stub_status_module \</span><br><span class="line">--with-http_gunzip_module \</span><br><span class="line">--with-poll_module \</span><br><span class="line">--with-threads \</span><br><span class="line">--with-http_ssl_module \</span><br><span class="line">--add-module=/usr/local/src/fastdfs-nginx-module/src \</span><br><span class="line">--add-module=/usr/local/src/ngx_cache_purge-2.3</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>注：nginx部署在每一个storage节点上。</p>
+<h1 id="2、单机部署"><a href="#2、单机部署" class="headerlink" title="2、单机部署"></a>2、单机部署</h1><h2 id="2-1、跟踪服务器tracker"><a href="#2-1、跟踪服务器tracker" class="headerlink" title="2.1、跟踪服务器tracker"></a>2.1、跟踪服务器tracker</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/tracker.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">需要修改的内容如下</span></span><br><span class="line">port=22122  # tracker服务器端口（默认22122,一般不修改）</span><br><span class="line">base_path=/home/fastdfs/tracker  # 存储日志和数据的根目录</span><br><span class="line"><span class="meta">#</span><span class="bash">保存后启动</span></span><br><span class="line">/etc/init.d/fdfs_trackerd start #启动tracker服务</span><br><span class="line">chkconfig fdfs_trackerd on #自启动tracker服务</span><br></pre></td></tr></table></figure>
+<p>启动问题：</p>
+<p>1、无权限：执行chmod u+x /etc/init.d/fdfs_trackerd</p>
+<p>2、-bash: xxx: /bin/bash^M: bad interpreter: No such file or directory，使用vim /etc/init.d/fdfs_trackerd，在执行 :set ff=unix</p>
+<h2 id="2-2、存储服务器storage"><a href="#2-2、存储服务器storage" class="headerlink" title="2.2、存储服务器storage"></a>2.2、存储服务器storage</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/storage.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">需要修改的内容如下</span></span><br><span class="line">port=23000  # storage服务端口（默认23000,一般不修改）</span><br><span class="line">base_path=/home/fastdfs/storage  # 数据和日志文件存储根目录</span><br><span class="line">store_path0=/home/fastdfs/storage  # 第一个存储目录</span><br><span class="line">tracker_server=10.20.52.152:22122  # tracker服务器IP和端口</span><br><span class="line">http.server_port=8888  # http访问文件的端口(默认8888,看情况修改,和nginx中保持一致)</span><br><span class="line"><span class="meta">#</span><span class="bash">保存后启动</span></span><br><span class="line">/etc/init.d/fdfs_storaged start #启动storage服务</span><br><span class="line">chkconfig fdfs_storaged on #自启动storage服务</span><br></pre></td></tr></table></figure>
+<p>启动问题：</p>
+<p>1、无权限：执行chmod u+x /etc/init.d/fdfs_storaged</p>
+<p>2、-bash: xxx: /bin/bash^M: bad interpreter: No such file or directory，使用vim /etc/init.d/fdfs_storaged，在执行 :set ff=unix</p>
+<h2 id="2-3、本地客户端-非必须"><a href="#2-3、本地客户端-非必须" class="headerlink" title="2.3、本地客户端(非必须)"></a>2.3、本地客户端(非必须)</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/client.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">需要修改的内容如下</span></span><br><span class="line">base_path=/home/fastdfs/tracker</span><br><span class="line">tracker_server=10.20.52.152:22122    #tracker IP地址</span><br><span class="line"><span class="meta">#</span><span class="bash">保存后测试,返回ID表示成功 eg:group1/M00/00/00/ChQ0mFwu-5OAWcguAA-vFnwb12g.tar.gz</span></span><br><span class="line">fdfs_upload_file /etc/fdfs/client.conf /usr/local/src/nginx-1.15.8.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="2-4、nginx-for-storage"><a href="#2-4、nginx-for-storage" class="headerlink" title="2.4、nginx for storage"></a>2.4、nginx for storage</h2><p> 单组配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/mod_fastdfs.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">需要修改的内容如下</span></span><br><span class="line">tracker_server=10.20.52.152:22122</span><br><span class="line">url_have_group_name=true</span><br><span class="line">base_path=/home/fastdfs/storage</span><br><span class="line">store_path0=/home/fastdfs/storage</span><br></pre></td></tr></table></figure>
+<p>多组配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">connect_timeout=10 </span><br><span class="line">tracker_server=192.168.1.203:22122 </span><br><span class="line">tracker_server=192.168.1.204:22122 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">url_have_group_name = true </span><br><span class="line">store_path0=/fastdfs/storage </span><br><span class="line">group_name=group1 #第一组为 group1  第二组为 group2 </span><br><span class="line">group_count = 2 </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">追加以下内容 </span></span><br><span class="line">[group1] </span><br><span class="line">group_name=group1 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">store_path_count=1 </span><br><span class="line">store_path0=/fastdfs/storage </span><br><span class="line"> </span><br><span class="line">[group2] </span><br><span class="line">group_name=group2 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">store_path_count=1 </span><br><span class="line">store_path0=/fastdfs/storage</span><br></pre></td></tr></table></figure>
+<p>nginx配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">配置nginx.config</span></span><br><span class="line">vi /usr/local/nginx/conf/nginx.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">添加如下配置</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen       8888;    ## 该端口为storage.conf中的http.server_port相同</span><br><span class="line">    server_name  localhost;</span><br><span class="line">    location ~/group[0-9]/ &#123;</span><br><span class="line">        ngx_fastdfs_module;</span><br><span class="line">    &#125;</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">    root   html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">保存后启动测试</span></span><br><span class="line">/usr/local/nginx/sbin/nginx #启动nginx</span><br><span class="line"><span class="meta">#</span><span class="bash">测试下载，用外部浏览器访问刚才已传过的nginx安装包,引用返回的ID</span></span><br><span class="line">http://10.20.52.152:8888/group1/M00/00/00/ChQ0mFwu-5OAWcguAA-vFnwb12g.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">弹出下载单机部署全部跑通，否则首先检查防火墙，再检查其他配置。</span></span><br></pre></td></tr></table></figure>
+<p>至此，单机版部署完毕。</p>
+<h1 id="3、集群部署"><a href="#3、集群部署" class="headerlink" title="3、集群部署"></a>3、集群部署</h1><h2 id="3-1、架构图"><a href="#3-1、架构图" class="headerlink" title="3.1、架构图"></a>3.1、架构图</h2><p><img src="/2019/01/04/FastDFS5-X-Nginx安装部署手册/fastdfs.png" alt="img"></p>
+<h2 id="3-2、跟踪服务器tracker"><a href="#3-2、跟踪服务器tracker" class="headerlink" title="3.2、跟踪服务器tracker"></a>3.2、跟踪服务器tracker</h2><p>在两台跟踪服务器tracker上配置，同 <strong>2.1、跟踪服务器tracker</strong></p>
+<h2 id="3-3、存储服务器storage"><a href="#3-3、存储服务器storage" class="headerlink" title="3.3、存储服务器storage"></a>3.3、存储服务器storage</h2><h3 id="3-3-1、group1配置"><a href="#3-3-1、group1配置" class="headerlink" title="3.3.1、group1配置"></a>3.3.1、group1配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/storage.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">需要修改的内容如下</span></span><br><span class="line">port=23000  # storage服务端口（默认23000,一般不修改）</span><br><span class="line">base_path=/home/fastdfs/storage  # 数据和日志文件存储根目录</span><br><span class="line">store_path0=/home/fastdfs/storage  # 第一个存储目录</span><br><span class="line">group_name=group1</span><br><span class="line">tracker_server=10.20.52.153:22122  # tracker服务器IP和端口</span><br><span class="line">tracker_server=10.20.52.152:22122  # tracker服务器IP和端口(唯一与单机版不同的地方)</span><br><span class="line">http.server_port=8888  # http访问文件的端口(默认8888,看情况修改,和nginx中保持一致)</span><br><span class="line"><span class="meta">#</span><span class="bash">保存后启动</span></span><br><span class="line">/etc/init.d/fdfs_storaged start #启动storage服务</span><br><span class="line">chkconfig fdfs_storaged on #自启动storage服务</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-2、group2配置"><a href="#3-3-2、group2配置" class="headerlink" title="3.3.2、group2配置"></a>3.3.2、group2配置</h3><p>如果多个group，需要进行group2的配置，于group1的配置一致，只是group_name=group2</p>
+<h2 id="3-4、存储节点整合ngnix"><a href="#3-4、存储节点整合ngnix" class="headerlink" title="3.4、存储节点整合ngnix"></a>3.4、存储节点整合ngnix</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">1.修改整合模块配置</span><br><span class="line">cp /usr/local/fast/fastdfs-nginx-module/src/mod_fastdfs.conf /etc/fdfs/  &amp;&amp; vim /etc/fdfs/mod_fastdfs.conf</span><br><span class="line">修改内容：</span><br><span class="line">注意：第一组(205、206)和第二组(207、208) 节点修改内容，只有组名不同 </span><br><span class="line">connect_timeout=10 </span><br><span class="line">tracker_server=192.168.1.203:22122 </span><br><span class="line">tracker_server=192.168.1.204:22122 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">url_have_group_name = true </span><br><span class="line">store_path0=/fastdfs/storage </span><br><span class="line">group_name=group1 #第一组为 group1  第二组为 group2 </span><br><span class="line">group_count = 2 </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">追加以下内容 </span></span><br><span class="line">[group1] </span><br><span class="line">group_name=group1 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">store_path_count=1 </span><br><span class="line">store_path0=/fastdfs/storage </span><br><span class="line"> </span><br><span class="line">[group2] </span><br><span class="line">group_name=group2 </span><br><span class="line">storage_server_port=23000 </span><br><span class="line">store_path_count=1 </span><br><span class="line">store_path0=/fastdfs/storage</span><br><span class="line"></span><br><span class="line">2.修改 Nginx 配置文件4个节点 </span><br><span class="line">命令：vim usr/local/nginx.conf </span><br><span class="line">修改内容：</span><br><span class="line">listen 8888; </span><br><span class="line">server_name localhost; </span><br><span class="line">location ~/group([0-9]) &#123; </span><br><span class="line">    ngx_fastdfs_module; </span><br><span class="line">&#125;</span><br><span class="line">启动4个节点Nginx: /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+<h2 id="3-5、nginx存储节点提供负载均衡"><a href="#3-5、nginx存储节点提供负载均衡" class="headerlink" title="3.5、nginx存储节点提供负载均衡"></a>3.5、nginx存储节点提供负载均衡</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/nginx/conf/nginx.conf</span><br><span class="line">修改内容：</span><br><span class="line">events &#123; </span><br><span class="line">    worker_connections  1024;  </span><br><span class="line">    use epoll; </span><br><span class="line">&#125; </span><br><span class="line">http &#123; </span><br><span class="line">    include       mime.types; </span><br><span class="line">    default_type  application/octet-stream; </span><br><span class="line">    sendfile        on; </span><br><span class="line">    tcp_nopush     on; </span><br><span class="line">    keepalive_timeout  65; </span><br><span class="line">    #设置缓存 </span><br><span class="line">    server_names_hash_bucket_size 128;    </span><br><span class="line">    client_header_buffer_size 32k;    </span><br><span class="line">    large_client_header_buffers 4 32k;    </span><br><span class="line">    client_max_body_size 300m;   </span><br><span class="line"> </span><br><span class="line">    proxy_redirect off; </span><br><span class="line">    proxy_set_header Host $http_host; </span><br><span class="line">   </span><br><span class="line">    proxy_set_header Cookie $http_cookie; </span><br><span class="line">   </span><br><span class="line">    proxy_set_header X-Real-IP $remote_addr; </span><br><span class="line">   </span><br><span class="line">    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; </span><br><span class="line"> </span><br><span class="line">    proxy_connect_timeout 90;    </span><br><span class="line">    proxy_read_timeout 90;    </span><br><span class="line">    proxy_send_timeout 90;    </span><br><span class="line">    proxy_buffer_size 16k;    </span><br><span class="line">    proxy_buffers 4 64k;    </span><br><span class="line">    proxy_busy_buffers_size 128k;    </span><br><span class="line">    proxy_temp_file_write_size 128k;   </span><br><span class="line">    #设置缓存存储路径、存储方式、分配内存大小、磁盘最大空间、缓存期限  </span><br><span class="line">    proxy_cache_path /fastdfs/cache/nginx/proxy_cache levels=1:2 </span><br><span class="line">    keys_zone=http-chche:200m max_size=1g inactive=30d; </span><br><span class="line">    proxy_temp_path /fastdfs/cache/nginx/proxy_cache/tmp; </span><br><span class="line"> </span><br><span class="line">    # weight 权重  max_fails 失败重试次数 fail_timeout 连接失败超时时间 </span><br><span class="line">    #设置 group1 的服务器 </span><br><span class="line">    upstream fdfs_group1 &#123; </span><br><span class="line">         server 192.168.1.205:8888 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">         server 192.168.1.206:8888 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    #设置 group2 的服务器 </span><br><span class="line">    upstream fdfs_group2 &#123; </span><br><span class="line">         server 192.168.1.207:8888 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">         server 192.168.1.208:8888 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> server &#123; </span><br><span class="line">        listen       8000; </span><br><span class="line">        server_name  localhost; </span><br><span class="line">        #charset koi8-r; </span><br><span class="line">        #access_log  logs/host.access.log  main; </span><br><span class="line"> </span><br><span class="line">        #设置 group 的负载均衡参数 </span><br><span class="line">        location /group1/M00 &#123; </span><br><span class="line">           proxy_next_upstream http_502 http_504 error timeout invalid_header; </span><br><span class="line">            proxy_cache http-cache; </span><br><span class="line">            proxy_cache_valid  200 304 12h; </span><br><span class="line">            proxy_cache_key $uri$is_args$args; </span><br><span class="line">            proxy_pass http://fdfs_group1; </span><br><span class="line">            expires 30d; </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line">         location /group2/M00 &#123; </span><br><span class="line">            proxy_next_upstream http_502 http_504 error timeout invalid_header; </span><br><span class="line">            proxy_cache http-cache; </span><br><span class="line">            proxy_cache_valid 200 304 12h; </span><br><span class="line">            proxy_cache_key $uri$is_args$args; </span><br><span class="line">            proxy_pass http://fdfs_group2; </span><br><span class="line">            expires 30d; </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        #设置清除缓存的访问权限 </span><br><span class="line">        location ~/purge(/.*) &#123; </span><br><span class="line">            allow 127.0.0.1; </span><br><span class="line">            allow 192.168.1.0/24; </span><br><span class="line">            deny all; </span><br><span class="line">            proxy_cache_purge http-cache $1$is_args$args; </span><br><span class="line">        &#125; </span><br><span class="line">        #error_page  404              /404.html; </span><br><span class="line">        # redirect server error pages to the static page /50x.html </span><br><span class="line">        # </span><br><span class="line">        error_page   500 502 503 504  /50x.html; </span><br><span class="line">        location = /50x.html &#123; </span><br><span class="line">            root html;  </span><br><span class="line">        &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>按以上nginx 配置文件的要求，创建对应的缓存目录2个跟踪器节点都需要： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /fastdfs/cache/nginx/proxy_cache </span><br><span class="line">mkdir -p /fastdfs/cache/nginx/proxy_cache/tmp</span><br></pre></td></tr></table></figure>
+<h2 id="3-6、供统一访问IP"><a href="#3-6、供统一访问IP" class="headerlink" title="3.6、供统一访问IP"></a>3.6、供统一访问IP</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">修改nginx配置</span><br><span class="line">vim /usr/local/nginx/conf/nginx.conf</span><br><span class="line">修改内容：</span><br><span class="line">upstream fastdfs_tracker &#123;</span><br><span class="line">    server 192.168.1.203:8000 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">    server 192.168.1.204:8000 weight=1 max_fails=2 fail_timeout=30s; </span><br><span class="line">&#125;</span><br><span class="line">server &#123; </span><br><span class="line">        listen       80; </span><br><span class="line">        server_name  localhost; </span><br><span class="line">        location / &#123; </span><br><span class="line">            root html; </span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">        &#125; </span><br><span class="line">        error_page   500 502 503 504  /50x.html; </span><br><span class="line">        location = /50x.html &#123; </span><br><span class="line">            root html; </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line">        ## FastDFS Proxy 代理路径设置为 /fastdfs </span><br><span class="line">        location /fastdfs &#123; </span><br><span class="line">            root   html; </span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">            proxy_pass  http://fastdfs_tracker/; </span><br><span class="line">            proxy_set_header Host  $http_host; </span><br><span class="line">            proxy_set_header Cookie $http_cookie; </span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr; </span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; </span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme; </span><br><span class="line">            client_max_body_size  300m; </span><br><span class="line">        &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="4、节点停止"><a href="#4、节点停止" class="headerlink" title="4、节点停止"></a>4、节点停止</h1><p>千万不要使用 kill -9 命令强杀 FastDFS 进程,否则可能会导致 binlog 数据丢失</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">关闭集群步骤： </span><br><span class="line">1、201 202 两台一级负载节点 </span><br><span class="line">关闭 keepalived 命令：service keepalived stop </span><br><span class="line">关闭 nginx 命令：/usr/local/nginx/sbin/nginx –s stop </span><br><span class="line"> </span><br><span class="line">2、203 204 两台二级负载节点，跟踪器节点 </span><br><span class="line">关闭 nginx 命令：/usr/local/nginx/sbin/nginx –s stop </span><br><span class="line">关闭 trackerd 跟踪器命令：/etc/init.d/fdfs_trackerd stop </span><br><span class="line"> </span><br><span class="line">3、205 206 207 208 四台三级负载节点，存储节点 </span><br><span class="line">关闭 nginx 命令：/usr/local/nginx/sbin/nginx –s stop </span><br><span class="line">关闭 storage 存储器命令： /etc/init.d/fdfs_storaged stop </span><br><span class="line">注意：千万不要使用 kill -9 命令强杀 FastDFS 进程,否则可能会导致 binlog 数据丢失</span><br></pre></td></tr></table></figure>
+<h1 id="5、keepalived安装"><a href="#5、keepalived安装" class="headerlink" title="5、keepalived安装"></a>5、keepalived安装</h1><h2 id="5-1、部署方案"><a href="#5-1、部署方案" class="headerlink" title="5.1、部署方案"></a>5.1、部署方案</h2><p>主备部署</p>
+<table>
+<thead>
+<tr>
+<th>部署项</th>
+<th>部署说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nginx</td>
+<td>201、202 /etc/nginx/nginx.conf相同配置</td>
+</tr>
+<tr>
+<td>keepalived</td>
+<td>201-master、202-backup   虚拟IP设置为192.168.1.120</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-2、安装keepalived"><a href="#5-2、安装keepalived" class="headerlink" title="5.2、安装keepalived"></a>5.2、安装keepalived</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf keepalived-2.0.10.tar.gz -C /usr/local</span><br><span class="line">mkdir /usr/local/keepalived &amp;&amp; cd /usr/local/keepalived-2.0.10 &amp;&amp; ./configure --prefix=/usr/local/keepalived</span><br><span class="line"><span class="meta">#</span><span class="bash">编译 安装</span></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="meta">#</span><span class="bash">将Keepalived配置为linux自启动服务</span></span><br><span class="line"><span class="meta">#</span><span class="bash">创建目录</span></span><br><span class="line">mkdir /etc/keepalived</span><br><span class="line"><span class="meta">#</span><span class="bash">拷贝文件</span></span><br><span class="line">cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/</span><br><span class="line">cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/</span><br><span class="line">cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/</span><br><span class="line">cp /usr/local/keepalived/sbin/keepalived /usr/sbin</span><br><span class="line"><span class="meta">#</span><span class="bash">添加keepalived到开机启动</span></span><br><span class="line">chkconfig keepalived on</span><br><span class="line"><span class="meta">#</span><span class="bash">启动keepalived服务</span></span><br><span class="line">service keepalived start [stop restart]</span><br></pre></td></tr></table></figure>
+<h2 id="5-3、配置keepalived"><a href="#5-3、配置keepalived" class="headerlink" title="5.3、配置keepalived"></a>5.3、配置keepalived</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+<p>主节点配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">global_defs &#123;</span><br><span class="line">   router_id 201 ##标识节点的字符串，通常为hostname</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script chk_nginx &#123;</span><br><span class="line">    script "/etc/keepalived/nginx_check.sh" ##执行脚本位置</span><br><span class="line">    interval 2 ##检测时间间隔</span><br><span class="line">    weight -20 ## 如果条件成立则权重减20（-20）</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 定义虚拟路由 VI_1为自定义标识。</span></span></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">state MASTER   ## 主节点为MASTER，备份节点为BACKUP</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eth6）</span></span></span><br><span class="line">interface eth0</span><br><span class="line">virtual_router_id 201  ## 虚拟路由ID号  同一个集群主备要一致</span><br><span class="line">    mcast_src_ip 192.168.1.201  ## 本机ip地址</span><br><span class="line">    priority 100  ##优先级配置（0-254的值）</span><br><span class="line">    Nopreempt  ## </span><br><span class="line">    advert_int 1 ## 组播信息发送间隔，俩个节点必须配置一致，默认1s</span><br><span class="line">    authentication &#123;  </span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1234 ## 真实生产环境下对密码进行匹配</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    track_script &#123;</span><br><span class="line">        chk_nginx</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.1.120 ## 虚拟ip(vip)，可以指定多个</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>备份节点配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">global_defs &#123;</span><br><span class="line">   router_id 202</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script chk_nginx &#123;</span><br><span class="line">    script "/etc/keepalived/nginx_check.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -20</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 201</span><br><span class="line">    mcast_src_ip 192.168.1.202</span><br><span class="line">    priority 90 ##优先级配置</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1234</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    track_script &#123;</span><br><span class="line">        chk_nginx</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.1.120</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>动态检查脚本nginx_check.sh：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">A=`ps -C nginx --no-heading|wc -l` </span><br><span class="line">if [ $A -eq 0 ];then </span><br><span class="line">    /usr/local/nginx/sbin/nginx </span><br><span class="line">    sleep 2 </span><br><span class="line"></span><br><span class="line">    if [ `ps -C nginx --no-heading |wc -l` -eq 0 ];then </span><br><span class="line"></span><br><span class="line">        killall keepalived </span><br><span class="line">    fi </span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>脚本赋权：chmod +x  /etc/keepalived/nginx_check.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service keepalived restart</span><br></pre></td></tr></table></figure>
+<p> 重新查看ip a  多了一个虚拟IP：192.168.1.120</p>
+<h1 id="6、FastDFS客户端使用"><a href="#6、FastDFS客户端使用" class="headerlink" title="6、FastDFS客户端使用"></a>6、FastDFS客户端使用</h1><p>引入依赖：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;com.asiainfo.css&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;css-framework&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>暂时未上传，可以在css-sms代码中查看<a href="https://gitlab.asiainfo.com/ctc-datadevdeliver-worktool/css-sms.git。" target="_blank" rel="noopener">https://gitlab.asiainfo.com/ctc-datadevdeliver-worktool/css-sms.git。</a></p>
+<p>使用时通过注入FastDFSOperations对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">public</span> FastDFSOperations fastDFSOperations;</span><br></pre></td></tr></table></figure>
+<p>参数配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fdfs.connect-timeout=600</span><br><span class="line">fdfs.so-timeout=1500</span><br><span class="line">fdfs.tracker-list=10.20.52.153:22122,10.20.52.152:22122</span><br><span class="line">fdfs.pool.max-total=10</span><br><span class="line">fdfs.pool.max-wait-millis=100</span><br></pre></td></tr></table></figure>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> Object <span class="title">uploadFile</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String path = <span class="string">"D:\\logstash-6.2.3.tar.gz"</span>;</span><br><span class="line">    StorePath storePath = <span class="keyword">this</span>.fastDFSOperations.uploadFile(path);</span><br><span class="line">    <span class="keyword">return</span> storePath;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getMetaData</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    String fileUri = <span class="string">"group1/M00/00/00/ChQ0mVwyrgyAXTvDCD0WEGH_gZ86853.gz"</span>;</span><br><span class="line">    Set&lt;MetaData&gt; metaData = <span class="keyword">this</span>.fastDFSOperations.getFileMetaData(fileUri);</span><br><span class="line">    <span class="keyword">return</span> metaData;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">fileInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String fileUri = <span class="string">"group1/M00/00/00/ChQ0mVwyrgyAXTvDCD0WEGH_gZ86853.gz"</span>;</span><br><span class="line">    FileInfo fileInfo = <span class="keyword">this</span>.fastDFSOperations.getFileInfo(fileUri);</span><br><span class="line">    <span class="keyword">return</span> fileInfo;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">download</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String fileUri = <span class="string">"group1/M00/00/00/ChQ0mVwyrgyAXTvDCD0WEGH_gZ86853.gz"</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] bytes = <span class="keyword">this</span>.fastDFSOperations.downloadFile(fileUri);</span><br><span class="line">    File file= <span class="keyword">new</span> File(<span class="string">"D:\\fastdfs.tar.gz"</span>);</span><br><span class="line">    FileUtils.writeByteArrayToFile(file, bytes);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">delete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String fileUri = <span class="string">"group1/M00/00/00/ChQ0mVwyrgyAXTvDCD0WEGH_gZ86853.gz"</span>;</span><br><span class="line">    <span class="keyword">this</span>.fastDFSOperations.deleteFile(fileUri);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/04/FastDFS5-X-Nginx安装部署手册/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CMP持续集成实例" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/27/CMP持续集成实例/">CMP持续集成实例</a>
+    </h1>
+  
+
+        
+        <a href="/2018/12/27/CMP持续集成实例/" class="archive-article-date">
+  	<time datetime="2018-12-27T07:08:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="三维联动-倒三角持续集成实例"><a href="#三维联动-倒三角持续集成实例" class="headerlink" title="三维联动-倒三角持续集成实例"></a>三维联动-倒三角持续集成实例</h1><h2 id="1、环境准备"><a href="#1、环境准备" class="headerlink" title="1、环境准备"></a>1、环境准备</h2><h3 id="1-1、主机准备"><a href="#1-1、主机准备" class="headerlink" title="1.1、主机准备"></a>1.1、主机准备</h3><table>
+<thead>
+<tr>
+<th>准备项目</th>
+<th>项目内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编译主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>编译主机用户名</td>
+<td>aicompile</td>
+</tr>
+<tr>
+<td>编译主机密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>编译主机具备环境</td>
+<td>git、java、maven、node</td>
+</tr>
+<tr>
+<td>制品仓储主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>制品仓储主机用户名</td>
+<td>aistore</td>
+</tr>
+<tr>
+<td>制品仓储主机密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>部署主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>部署主机用户名</td>
+<td>aideploy</td>
+</tr>
+<tr>
+<td>部署主机密码</td>
+<td>XXXXXXX</td>
+</tr>
+<tr>
+<td>docker主机地址</td>
+<td>10.20.52.154</td>
+</tr>
+<tr>
+<td>docker主机用户名</td>
+<td>root</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-2、规范"><a href="#1-2、规范" class="headerlink" title="1.2、规范"></a>1.2、规范</h3><ul>
+<li><p>代码提交，必须要按照<strong>[</strong> <strong>@dmp编号@提交内容@自定义内容</strong> <strong>]</strong>这种格式进行提交，否则无法构建</p>
+</li>
+<li><p>配置性文件不能写死，需要区分环境，以<strong>环境变量</strong>的形式或者<strong>入参</strong>的形式</p>
+<p>如spring boot的application.properties文件，可以配置多个环境的配置</p>
+<p>h5页面调用api服务的地址</p>
+<p>部署完毕后，api和h5都必须在kong上进行配置，通过kong进行代理。</p>
+</li>
+<li><p>编译的代码路径：/data3/css-sourcecode</p>
+</li>
+<li><p>归档的路径：/data3/aistore</p>
+</li>
+<li><p>部署路径：/data3/deploy</p>
+</li>
+<li><p>docker打包路径：/root/css-docker</p>
+</li>
+</ul>
+<h2 id="2、倒三角SD服务构建流程"><a href="#2、倒三角SD服务构建流程" class="headerlink" title="2、倒三角SD服务构建流程"></a>2、倒三角SD服务构建流程</h2><h3 id="2-1、开始构建邮件通知"><a href="#2-1、开始构建邮件通知" class="headerlink" title="2.1、开始构建邮件通知"></a>2.1、开始构建邮件通知</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build1.png" alt="image"></p>
+<h3 id="2-2、构建代码分支合并"><a href="#2-2、构建代码分支合并" class="headerlink" title="2.2、构建代码分支合并"></a>2.2、构建代码分支合并</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build2.png" alt="image"></p>
+<h3 id="2-3、构建代码打包归档"><a href="#2-3、构建代码打包归档" class="headerlink" title="2.3、构建代码打包归档"></a>2.3、构建代码打包归档</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build3.png" alt="image"></p>
+<p>build.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$2</span><br><span class="line">GROUP_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone https://git用户名:git密码@gitlab.asiainfo.com/$&#123;GROUP_NAME&#125;/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mvn clean package &gt;&gt; "$LOG" 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GROUP_NAME($1)</td>
+<td>第一个参数：代码所在分组名</td>
+</tr>
+<tr>
+<td>PROJECT_NAME($2)</td>
+<td>第二个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> cd /data3/css-sourcecode/bin/</span><br><span class="line">./build.sh ctc-datadevdeliver-wmc sd</span><br></pre></td></tr></table></figure>
+<h3 id="2-4、构建docker镜像"><a href="#2-4、构建docker镜像" class="headerlink" title="2.4、构建docker镜像"></a>2.4、构建docker镜像</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build4.png" alt="image"></p>
+<p>build.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line"></span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">cd $&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.war</span><br><span class="line"></span><br><span class="line">sshpass -p aicompile@123 scp aicompile@10.20.16.203:/data3/css-sourcecode/$&#123;PROJECT_NAME&#125;/target/$&#123;PROJECT_NAME&#125;.war .</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.tar</span><br><span class="line"></span><br><span class="line">docker build -t $&#123;PROJECT_NAME&#125;:$&#123;TAG&#125; .</span><br><span class="line"></span><br><span class="line">docker save -o $&#123;PROJECT_NAME&#125;.tar $&#123;PROJECT_NAME&#125;:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /root/css-docker/bin</span><br><span class="line">./build.sh sd</span><br></pre></td></tr></table></figure>
+<h3 id="2-5、构建结束邮件通知"><a href="#2-5、构建结束邮件通知" class="headerlink" title="2.5、构建结束邮件通知"></a>2.5、构建结束邮件通知</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build5.png" alt="image"></p>
+<h2 id="3、倒三角SD服务部署流程"><a href="#3、倒三角SD服务部署流程" class="headerlink" title="3、倒三角SD服务部署流程"></a>3、倒三角SD服务部署流程</h2><h3 id="3-1、环境管理-SD服务停止"><a href="#3-1、环境管理-SD服务停止" class="headerlink" title="3.1、环境管理-SD服务停止"></a>3.1、环境管理-SD服务停止</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build6.png" alt="image"></p>
+<p>run-server.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JVMFLAGS JVM参数可以在这里设置</span></span><br><span class="line">JVMFLAGS=-Dfile.encoding=UTF-8</span><br><span class="line"></span><br><span class="line">SERVER_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">SERVER_HOME="$(dirname "$&#123;SERVER_HOME&#125;")"</span><br><span class="line">SERVER_HOME="$(cd "$&#123;SERVER_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">if [ "$JAVA_HOME" != "" ]; then</span><br><span class="line">  JAVA="$JAVA_HOME/bin/java"</span><br><span class="line">else</span><br><span class="line">  JAVA=java</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">mkdir -p $SERVER_HOME/../logs</span><br><span class="line">mkdir -p $SERVER_HOME/../pid</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 转化为绝对路径</span></span><br><span class="line">SERVER_MAIN="$SERVER_HOME/../lib/sd.war"</span><br><span class="line"></span><br><span class="line">SERVER_PID_FILE="$SERVER_HOME/../pid/server.pid"</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">start)</span><br><span class="line">    echo "Starting SERVER... "</span><br><span class="line">    if [ -f "$SERVER_PID_FILE" ]; then</span><br><span class="line">      if kill -0 `cat "$SERVER_PID_FILE"` &gt; /dev/null 2&gt;&amp;1; then</span><br><span class="line">         echo $command already running as process `cat "$SERVER_PID_FILE"`.</span><br><span class="line">         exit 0</span><br><span class="line">      fi</span><br><span class="line">fi</span><br><span class="line">            "$JAVA" -jar $JVMFLAGS $SERVER_MAIN --server.port=9000 &gt; $SERVER_HOME/../logs/css.log &amp;</span><br><span class="line"></span><br><span class="line">    if [ $? -eq 0 ]</span><br><span class="line">    then</span><br><span class="line">      if /bin/echo -n $! &gt; "$SERVER_PID_FILE"</span><br><span class="line">      then</span><br><span class="line">        sleep 1</span><br><span class="line">        echo "STARTED"</span><br><span class="line">      else</span><br><span class="line">        echo "FAILED TO WRITE PID"</span><br><span class="line">        exit 1</span><br><span class="line">      fi</span><br><span class="line">    else</span><br><span class="line">      echo "SERVER DID NOT START"</span><br><span class="line">      exit 1</span><br><span class="line">    fi</span><br><span class="line">;;</span><br><span class="line">restart)</span><br><span class="line">    sh $0 stop</span><br><span class="line">    sleep 3</span><br><span class="line">    sh $0 start</span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">    echo "Stopping SERVER ... "</span><br><span class="line">    if [ ! -f "$SERVER_PID_FILE" ]</span><br><span class="line">    then</span><br><span class="line">      echo "no server to stop (could not find file $SERVER_PID_FILE)"</span><br><span class="line">    else</span><br><span class="line">      kill -9 $(cat "$SERVER_PID_FILE")</span><br><span class="line">      rm "$SERVER_PID_FILE"</span><br><span class="line">       echo "STOPPED"</span><br><span class="line">    fi</span><br><span class="line">    exit 0</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">    echo "Usage: $0 &#123;start|stop|restart&#125;" &gt;&amp;2</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>执行脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/data3/deploy/sd/bin/run-server.sh stop</span><br></pre></td></tr></table></figure>
+<h3 id="3-2、环境管理-SD服务更新"><a href="#3-2、环境管理-SD服务更新" class="headerlink" title="3.2、环境管理-SD服务更新"></a>3.2、环境管理-SD服务更新</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build8.png" alt="image"></p>
+<p>如果需要中间处理更新包，可以在shell脚本中编写执行脚本。如h5打出的tar.gz压缩包，需要现解压，然后将解压的文件拷贝至web服务中。</p>
+<h3 id="3-3、环境管理-SD服务启动"><a href="#3-3、环境管理-SD服务启动" class="headerlink" title="3.3、环境管理-SD服务启动"></a>3.3、环境管理-SD服务启动</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build9.png" alt="image"></p>
+<p>脚本同执行停止的脚本，启动执行脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /data3/deploy/sd/bin/ &amp;&amp; ./run-server.sh start</span><br></pre></td></tr></table></figure>
+<h3 id="3-4、环境管理-SD服务停止（docker）"><a href="#3-4、环境管理-SD服务停止（docker）" class="headerlink" title="3.4、环境管理-SD服务停止（docker）"></a>3.4、环境管理-SD服务停止（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build13.png" alt="image"></p>
+<p>docker停止容器脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CONTAINER_ID=`docker ps -s |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker stop $CONTAINER_ID</span><br><span class="line">fi</span><br><span class="line">CONTAINER_ID=`docker ps -a |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker rm $CONTAINER_ID</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：镜像名称，如sd:latest</td>
+</tr>
+</tbody>
+</table>
+<p>执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/css-docker/bin/stop.sh h5:latest</span><br></pre></td></tr></table></figure>
+<h3 id="3-5、环境管理-SD服务更新（docker）"><a href="#3-5、环境管理-SD服务更新（docker）" class="headerlink" title="3.5、环境管理-SD服务更新（docker）"></a>3.5、环境管理-SD服务更新（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build14.png" alt="image"></p>
+<p>docker镜像更新脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker image rm sd:latest</span><br><span class="line">cd /root/images-local</span><br><span class="line">docker load -i sd.tar</span><br><span class="line">rm -rf sd.tar</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line">docker tag sd:latest sd:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-6、环境管理-SD服务启动（docker）"><a href="#3-6、环境管理-SD服务启动（docker）" class="headerlink" title="3.6、环境管理-SD服务启动（docker）"></a>3.6、环境管理-SD服务启动（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build15.png" alt="image"></p>
+<h3 id="3-7、倒三角SD服务部署流程-停止服务"><a href="#3-7、倒三角SD服务部署流程-停止服务" class="headerlink" title="3.7、倒三角SD服务部署流程-停止服务"></a>3.7、倒三角SD服务部署流程-停止服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build10.png" alt="image"></p>
+<h3 id="3-8、倒三角SD服务部署流程-更新服务"><a href="#3-8、倒三角SD服务部署流程-更新服务" class="headerlink" title="3.8、倒三角SD服务部署流程-更新服务"></a>3.8、倒三角SD服务部署流程-更新服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build11.png" alt="image"></p>
+<h3 id="3-9、倒三角SD服务部署流程-启动服务"><a href="#3-9、倒三角SD服务部署流程-启动服务" class="headerlink" title="3.9、倒三角SD服务部署流程-启动服务"></a>3.9、倒三角SD服务部署流程-启动服务</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-build12.png" alt="image"></p>
+<h2 id="4、倒三角H5前端构建流程"><a href="#4、倒三角H5前端构建流程" class="headerlink" title="4、倒三角H5前端构建流程"></a>4、倒三角H5前端构建流程</h2><h3 id="4-1、邮件通知"><a href="#4-1、邮件通知" class="headerlink" title="4.1、邮件通知"></a>4.1、邮件通知</h3><p>与SD服务构建一致，详见SD服务构建邮件通知。</p>
+<h3 id="4-2、H5构建打包"><a href="#4-2、H5构建打包" class="headerlink" title="4.2、H5构建打包"></a>4.2、H5构建打包</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build1.png" alt="image"></p>
+<p>build-h5.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$2</span><br><span class="line"></span><br><span class="line">GROUP_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build-h5.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone https://xilj:a8803272D@gitlab.asiainfo.com/$&#123;GROUP_NAME&#125;/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">rm -rf build</span><br><span class="line"></span><br><span class="line">rm -rf build-h5</span><br><span class="line">mkdir -p $SOURCE_HOME/build-h5</span><br><span class="line"></span><br><span class="line">npm i  &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">npm run build &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">cd $SOURCE_HOME/build</span><br><span class="line"></span><br><span class="line">tar -zcvf  $&#123;PROJECT_NAME&#125;.tar.gz .</span><br><span class="line"></span><br><span class="line">mv $&#123;PROJECT_NAME&#125;.tar.gz $SOURCE_HOME/build-h5/</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GROUP_NAME($1)</td>
+<td>第一个参数：代码所在分组名</td>
+</tr>
+<tr>
+<td>PROJECT_NAME($2)</td>
+<td>第二个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> cd /data3/css-sourcecode/bin/</span><br><span class="line">./build-h5.sh ctc-datadevdeliver-ued worktool-app-sd-h5</span><br></pre></td></tr></table></figure>
+<h3 id="4-3、H5-docker镜像构建"><a href="#4-3、H5-docker镜像构建" class="headerlink" title="4.3、H5 docker镜像构建"></a>4.3、H5 docker镜像构建</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build2.png" alt="image"></p>
+<p>build-h5镜像脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">v_time=`date <span class="string">"+%Y-%m-%d %H:%M:%S"</span>`</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">TAG=`date -d <span class="string">"<span class="variable">$v_time</span>"</span> +%Y%m%d%H%M`</span></span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">cd $&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.war</span><br><span class="line"></span><br><span class="line">sshpass -p aicompile@123 scp aicompile@10.20.16.203:/data3/css-sourcecode/$&#123;PROJECT_NAME&#125;/build-h5/worktool-app-sd-h5.tar.gz .</span><br><span class="line"></span><br><span class="line">rm -rf $&#123;PROJECT_NAME&#125;.tar</span><br><span class="line"></span><br><span class="line">docker build -t $&#123;PROJECT_NAME&#125;:latest .</span><br><span class="line"></span><br><span class="line">docker save -o $&#123;PROJECT_NAME&#125;.tar $&#123;PROJECT_NAME&#125;:latest</span><br><span class="line"></span><br><span class="line">docker image rm $&#123;PROJECT_NAME&#125;:latest</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：代码项目名称</td>
+</tr>
+</tbody>
+</table>
+<p>脚本执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /root/css-docker/bin</span><br><span class="line">./build.sh sd</span><br></pre></td></tr></table></figure>
+<h2 id="5、倒三角SD-H5应用部署流程"><a href="#5、倒三角SD-H5应用部署流程" class="headerlink" title="5、倒三角SD-H5应用部署流程"></a>5、倒三角SD-H5应用部署流程</h2><h3 id="5-1、环境管理-SD-H5应用停止（docker）"><a href="#5-1、环境管理-SD-H5应用停止（docker）" class="headerlink" title="5.1、环境管理-SD-H5应用停止（docker）"></a>5.1、环境管理-SD-H5应用停止（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build3.png" alt="image"></p>
+<p>stop.sh脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CONTAINER_ID=`docker ps -s |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker stop $CONTAINER_ID</span><br><span class="line">fi</span><br><span class="line">CONTAINER_ID=`docker ps -a |  grep "$&#123;PROJECT_NAME&#125;"  | awk '&#123;print $1&#125;'`</span><br><span class="line">if [ ! -n "$CONTAINER_ID" ]; then</span><br><span class="line">  echo "容器不存在"</span><br><span class="line">else</span><br><span class="line">  docker rm $CONTAINER_ID</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>需要参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROJECT_NAME($1)</td>
+<td>第一个参数：镜像名称，如sd:latest</td>
+</tr>
+</tbody>
+</table>
+<p>执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/css-docker/bin/stop.sh worktool-app-sd-h5:latest</span><br></pre></td></tr></table></figure>
+<h3 id="5-2、环境管理-SD-H5应用更新（docker）"><a href="#5-2、环境管理-SD-H5应用更新（docker）" class="headerlink" title="5.2、环境管理-SD-H5应用更新（docker）"></a>5.2、环境管理-SD-H5应用更新（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build4.png" alt="image"></p>
+<p>更新脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker image rm worktool-app-sd-h5:latest</span><br><span class="line">cd /root/images-local</span><br><span class="line">docker load -i worktool-app-sd-h5.tar</span><br><span class="line">rm -rf worktool-app-sd-h5.tar</span><br><span class="line">v_time=`date "+%Y-%m-%d %H:%M:%S"`</span><br><span class="line">TAG=`date -d "$v_time" +%Y%m%d%H%M`</span><br><span class="line">docker tag worktool-app-sd-h5:latest worktool-app-sd-h5:$&#123;TAG&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-3、环境管理-SD-H5应用启动（docker）"><a href="#5-3、环境管理-SD-H5应用启动（docker）" class="headerlink" title="5.3、环境管理-SD-H5应用启动（docker）"></a>5.3、环境管理-SD-H5应用启动（docker）</h3><p><img src="/2018/12/27/CMP持续集成实例/sd-h5-build5.png" alt="image"></p>
+<h3 id="5-4、SD-H5应用部署流程构建"><a href="#5-4、SD-H5应用部署流程构建" class="headerlink" title="5.4、SD-H5应用部署流程构建"></a>5.4、SD-H5应用部署流程构建</h3><p>因为配置固定，可参见 倒三角SD服务部署流程 章节：3.7、3.8、3.9.</p>
+<h2 id="6、网关配置"><a href="#6、网关配置" class="headerlink" title="6、网关配置"></a>6、网关配置</h2><h3 id="6-1、SD-H5配置"><a href="#6-1、SD-H5配置" class="headerlink" title="6.1、SD-H5配置"></a>6.1、SD-H5配置</h3><p><img src="/2018/12/27/CMP持续集成实例/kong1.png" alt="image"></p>
+<h3 id="6-2、SD-API配置"><a href="#6-2、SD-API配置" class="headerlink" title="6.2、SD-API配置"></a>6.2、SD-API配置</h3><p><img src="/2018/12/27/CMP持续集成实例/kong2.png" alt="image"></p>
+<h3 id="6-3、访问"><a href="#6-3、访问" class="headerlink" title="6.3、访问"></a>6.3、访问</h3><p><a href="http://10.20.52.154:16010/pages/sd/index.html?phone=15335175201&amp;auth=1&amp;latnid=250#/taskpool" target="_blank" rel="noopener">http://10.20.52.154:16010/pages/sd/index.html?phone=15335175201&amp;auth=1&amp;latnid=250#/taskpool</a></p>
+<p><img src="/2018/12/27/CMP持续集成实例/sd1.png" alt="image"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/12/27/CMP持续集成实例/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CMP构建部署集成" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/12/CMP构建部署集成/">CMP构建部署集成</a>
+    </h1>
+  
+
+        
+        <a href="/2018/12/12/CMP构建部署集成/" class="archive-article-date">
+  	<time datetime="2018-12-12T08:31:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CMP访问地址"><a href="#CMP访问地址" class="headerlink" title="CMP访问地址"></a>CMP访问地址</h1><p><a href="http://10.1.242.48:8830/" target="_blank" rel="noopener">http://10.1.242.48:8830/</a></p>
+<p>用户名密码为公司NT账号密码</p>
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><p>以<a href="http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。" target="_blank" rel="noopener">http://10.20.16.203/xilj/css-sms.git为例进行构建部署集成。</a></p>
+<h2 id="1、准备环境"><a href="#1、准备环境" class="headerlink" title="1、准备环境"></a>1、准备环境</h2><table>
+<thead>
+<tr>
+<th>准备项目</th>
+<th>项目内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>项目的命名</td>
+<td>CSS-SMS</td>
+</tr>
+<tr>
+<td>git仓库代码地址</td>
+<td><a href="http://10.20.16.203/xilj/css-sms.git" target="_blank" rel="noopener">http://10.20.16.203/xilj/css-sms.git</a></td>
+</tr>
+<tr>
+<td>git用户名</td>
+<td>xilj</td>
+</tr>
+<tr>
+<td>git用户密码</td>
+<td>XXXXXXXX</td>
+</tr>
+<tr>
+<td>git分支</td>
+<td>master</td>
+</tr>
+<tr>
+<td>代码编译主机地址</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>代码编译主机用户名</td>
+<td>aiscm</td>
+</tr>
+<tr>
+<td>代码编译主机密码</td>
+<td>aiscm@123</td>
+</tr>
+<tr>
+<td>代码编译生成路径</td>
+<td>/data3/css-sourcecode/css-sms/target</td>
+</tr>
+<tr>
+<td>代码编译后的包名</td>
+<td>css-sms-0.0.1-SNAPSHOT.jar</td>
+</tr>
+<tr>
+<td>制品仓储主机</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>制品仓储用户名</td>
+<td>xxxx</td>
+</tr>
+<tr>
+<td>制品仓储密码</td>
+<td>XXXXXX</td>
+</tr>
+<tr>
+<td>部署主机</td>
+<td>10.20.16.203</td>
+</tr>
+<tr>
+<td>部署路径</td>
+<td>/data3/deploy/css-sms/lib</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2、新建项目"><a href="#2、新建项目" class="headerlink" title="2、新建项目"></a>2、新建项目</h2><p><img src="/2018/12/12/CMP构建部署集成/new-project.png" alt="1544604784276"></p>
+<p>新建完项目后，在<strong>[任务管理]</strong>下会自动生成定时任务，定时任务的作用是同步git提交内容和dmp的需求。</p>
+<h2 id="3、主机管理"><a href="#3、主机管理" class="headerlink" title="3、主机管理"></a>3、主机管理</h2><p>配置主机服务器地址，以及使用的用户名、密码。包含编译主机、仓储主机。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/host.png" alt="image"></p>
+<p><img src="/2018/12/12/CMP构建部署集成/host-user.png" alt="image"></p>
+<h2 id="4、项目设置"><a href="#4、项目设置" class="headerlink" title="4、项目设置"></a>4、项目设置</h2><h3 id="代码仓储管理"><a href="#代码仓储管理" class="headerlink" title="代码仓储管理"></a>代码仓储管理</h3><p><img src="/2018/12/12/CMP构建部署集成/code-repo.png" alt="image"></p>
+<p>token设置注意事项，在高版本的gitlab中token为必须设置项，设置步骤：</p>
+<p>登录gitlab，进入user-settings</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-setting.png" alt="image"></p>
+<p>进入access tokens</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-token-setting.png" alt="image"></p>
+<p>获取token</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-token.png" alt="image"></p>
+<p>gitlab项目id的获取：进入该项目代码，选择Settings–General–General project settings</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-project-id.png" alt="image"></p>
+<p>建立分支</p>
+<p><img src="/2018/12/12/CMP构建部署集成/git-branch.png" alt="image"></p>
+<h3 id="制品仓储管理"><a href="#制品仓储管理" class="headerlink" title="制品仓储管理"></a>制品仓储管理</h3><p>新增制品仓储</p>
+<p><img src="/2018/12/12/CMP构建部署集成/prod-store.png" alt="image"></p>
+<p>配置信息包含主机地址，用户名，密码。</p>
+<h3 id="同步接口管理"><a href="#同步接口管理" class="headerlink" title="同步接口管理"></a>同步接口管理</h3><p>新增同步接口，接口分两级接口</p>
+<p>第一级：调用git hook push</p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-git.png" alt="image"></p>
+<p>备注分隔符为git提交备注信息的分割符，备注参数对应分割的内容的名称。</p>
+<p>提交的时候必须按格式@CTCODS_REQ_20181120_0003@自动化部署测试@自定义内容。否则CMP不识别提交的内容，不会进行构建。</p>
+<p>git hook配置，需要使用管理员账号登录，admin area–settings–Outbound requests进行勾选，否则无法调用git接口。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-git-setting.png" alt="image"></p>
+<p>第二级：调用dmp接口：<a href="http://192.168.15.21/OnlineServer/services/ProjectInfoWebService?wsdl" target="_blank" rel="noopener">http://192.168.15.21/OnlineServer/services/ProjectInfoWebService?wsdl</a></p>
+<p><img src="/2018/12/12/CMP构建部署集成/interface-dmp.png" alt="image"></p>
+<h2 id="5、邮箱服务配置"><a href="#5、邮箱服务配置" class="headerlink" title="5、邮箱服务配置"></a>5、邮箱服务配置</h2><p>配置邮件服务地址，用来在工作流执行过程中报警。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/email.png" alt="image"></p>
+<h2 id="6、构建工作流"><a href="#6、构建工作流" class="headerlink" title="6、构建工作流"></a>6、构建工作流</h2><p>配置构建的基本信息，给流程定义名称，流程类型选择构建类。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build1.png" alt="image"></p>
+<p>配置流程节点，点击 <strong>开始</strong> 后面的 <strong>+</strong> 号，包含节点名称、触发执行方式。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build2.png" alt="image"></p>
+<p>配置节点任务，合并分支</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build3.png" alt="image"></p>
+<p>新增代码构建节点，点击 <strong>开始</strong> 后面的 <strong>+</strong> 号，包含节点名称、触发执行方式。</p>
+<p>为代码构建配置执行任务</p>
+<p><img src="/2018/12/12/CMP构建部署集成/build4.png" alt="image"></p>
+<p>包含编译主机、编译执行脚本、构建包的输出路径、输出包名、构建包归档的存储主机、存储路径。</p>
+<p>编译脚本如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/build.log"</span><br><span class="line"></span><br><span class="line">if [ ! -d "$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;" ];then</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git clone http://xilj:密码@10.20.16.203/xilj/$&#123;PROJECT_NAME&#125;.git</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">else</span><br><span class="line">  SOURCE_HOME="$&#123;SOURCE_HOME&#125;/$&#123;PROJECT_NAME&#125;"</span><br><span class="line">  echo "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line">  git pull origin master &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mvn clean package &gt;&gt; "$LOG" 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>遇到的坑，因为这两个坑，处理了很久。</p>
+<p>第一个：maven环境变量配置，需要配置在用户的.bashrc文件下，不能配置在.bash_profile下，否则CMP找不到mvn命令。</p>
+<p>第二个：仓储主机不能和编译主机在同一个主机用户下，否则上传不上去。</p>
+<p>apidoc文档生成脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">set -x</span><br><span class="line">PROJECT_NAME=$1</span><br><span class="line"></span><br><span class="line">CODE_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">CODE_HOME="$(dirname "$&#123;CODE_HOME&#125;")"</span><br><span class="line">CODE_HOME="$(cd "$&#123;CODE_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">SOURCE_HOME="$&#123;CODE_HOME&#125;/../."</span><br><span class="line">SOURCE_HOME="$(cd "$(dirname "$&#123;SOURCE_HOME&#125;")"; pwd)"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/logs</span><br><span class="line">LOG="$&#123;SOURCE_HOME&#125;/logs/apidoc.log"</span><br><span class="line"></span><br><span class="line">cd "$&#123;SOURCE_HOME&#125;"</span><br><span class="line"></span><br><span class="line">mkdir -p $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc</span><br><span class="line"></span><br><span class="line">apidoc -i $&#123;PROJECT_NAME&#125; -o $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc  &gt;&gt; "$LOG" 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">cd $SOURCE_HOME/$&#123;PROJECT_NAME&#125;/apiDoc</span><br><span class="line"></span><br><span class="line">tar -zcvf  $&#123;PROJECT_NAME&#125;-apidoc.tar.gz .</span><br></pre></td></tr></table></figure>
+<h2 id="7、部署工作流"><a href="#7、部署工作流" class="headerlink" title="7、部署工作流"></a>7、部署工作流</h2><p>配置部署类工作流的时候需要先在<strong>[环境管理]</strong>中配置环境</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy1.png" alt="image"></p>
+<p>再点击环境，进入配置部署任务，目前配置三个任务，包含启动、停止、更新</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy2.png" alt="image"></p>
+<p>停止服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy3.png" alt="image"></p>
+<p>启动服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy4.png" alt="image"></p>
+<p>更新包服务的配置</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy5.png" alt="image"></p>
+<p>此处如果涉及部署包的修改或者转移或者备份等中间操作，需要在shell脚本中配置执行的脚本。</p>
+<p>run-server.sh脚本如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> JVMFLAGS JVM参数可以在这里设置</span></span><br><span class="line">JVMFLAGS=-Dfile.encoding=UTF-8</span><br><span class="line"></span><br><span class="line">SERVER_HOME="$&#123;BASH_SOURCE-$0&#125;"</span><br><span class="line">SERVER_HOME="$(dirname "$&#123;SERVER_HOME&#125;")"</span><br><span class="line">SERVER_HOME="$(cd "$&#123;SERVER_HOME&#125;"; pwd)"</span><br><span class="line"></span><br><span class="line">if [ "$JAVA_HOME" != "" ]; then</span><br><span class="line">  JAVA="$JAVA_HOME/bin/java"</span><br><span class="line">else</span><br><span class="line">  JAVA=java</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">mkdir -p $SERVER_HOME/../logs</span><br><span class="line">mkdir -p $SERVER_HOME/../pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 转化为绝对路径</span></span><br><span class="line"></span><br><span class="line">SERVER_MAIN=../lib/css-sms-0.0.1-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line">SERVER_PID_FILE="$SERVER_HOME/../pid/server.pid"</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">start)</span><br><span class="line">    echo "Starting SERVER... "</span><br><span class="line">    if [ -f "$SERVER_PID_FILE" ]; then</span><br><span class="line">      if kill -0 `cat "$SERVER_PID_FILE"` &gt; /dev/null 2&gt;&amp;1; then</span><br><span class="line">         echo $command already running as process `cat "$SERVER_PID_FILE"`.</span><br><span class="line">         exit 0</span><br><span class="line">      fi</span><br><span class="line">    fi</span><br><span class="line">    "$JAVA" -jar $JVMFLAGS $SERVER_MAIN --server.port=9000  &amp;</span><br><span class="line"></span><br><span class="line">        if [ $? -eq 0 ]</span><br><span class="line">    then</span><br><span class="line">      if /bin/echo -n $! &gt; "$SERVER_PID_FILE"</span><br><span class="line">      then</span><br><span class="line">        sleep 1</span><br><span class="line">        echo "STARTED"</span><br><span class="line">      else</span><br><span class="line">        echo "FAILED TO WRITE PID"</span><br><span class="line">        exit 1</span><br><span class="line">      fi</span><br><span class="line">    else</span><br><span class="line">      echo "SERVER DID NOT START"</span><br><span class="line">      exit 1</span><br><span class="line">    fi</span><br><span class="line">;;</span><br><span class="line">restart)</span><br><span class="line">    sh $0 stop</span><br><span class="line">    sleep 3</span><br><span class="line">    sh $0 start</span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">    echo "Stopping SERVER ... "</span><br><span class="line">    if [ ! -f "$SERVER_PID_FILE" ]</span><br><span class="line">    then</span><br><span class="line">      echo "no server to stop (could not find file $SERVER_PID_FILE)"</span><br><span class="line">    else</span><br><span class="line">      kill -9 $(cat "$SERVER_PID_FILE")</span><br><span class="line">      rm "$SERVER_PID_FILE"</span><br><span class="line">      echo "STOPPED"</span><br><span class="line">    fi</span><br><span class="line">    exit 0</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">    echo "Usage: $0 &#123;start|stop|restart&#125;" &gt;&amp;2</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>至此，完成部署的准备工作。</p>
+<p>配置部署工作流</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy6.png" alt="image"></p>
+<p>节点配置和执行任务都可参照构建，部署工作流的节点执行任务比构建类简单，因为都在环境里面配置好了。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/deploy7.png" alt="image"></p>
+<p>部署任务直接关联环境中配置的任务即可。</p>
+<h2 id="8、集成工作流"><a href="#8、集成工作流" class="headerlink" title="8、集成工作流"></a>8、集成工作流</h2><p>主要将构建和部署进行串联，实现自动化。</p>
+<p>集成工作流配置与部署类一样，直接在节点任务中管理已经配置的构建和部署工作流。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/integration1.png" alt="image"></p>
+<h2 id="9、docker构建部署"><a href="#9、docker构建部署" class="headerlink" title="9、docker构建部署"></a>9、docker构建部署</h2><p>其构建方式与构建jar、war的方式一样，通过shell脚本完本，CMP帮助流程化执行任务。</p>
+<p>使用带有docker环境的主机地址，编写docker打包脚本，产出物则为save后的tar包。</p>
+<h2 id="10、邮箱通知"><a href="#10、邮箱通知" class="headerlink" title="10、邮箱通知"></a>10、邮箱通知</h2><p>在流程配置的开始和结束新增邮件通知任务</p>
+<p><img src="/2018/12/12/CMP构建部署集成/email1.png" alt="image"></p>
+<h2 id="11、cqm集成"><a href="#11、cqm集成" class="headerlink" title="11、cqm集成"></a>11、cqm集成</h2><p>访问地址：<a href="http://cqm.asiainfo.com/#/login" target="_blank" rel="noopener">http://cqm.asiainfo.com/#/login</a></p>
+<p>在工程管理中新增git仓库中的地址，审批通过后会开始进行代码扫描。</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar1.png" alt="image"></p>
+<p>扫描完成后在<strong>常用查询</strong>–<strong>现存违规明细查询</strong>中查询违规等异常情况</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar2.png" alt="image"></p>
+<p>与CMP集成</p>
+<p>在构建工作流程中代码合并的时候新增sonar任务，配置cqm接口信息</p>
+<p><img src="/2018/12/12/CMP构建部署集成/sonar.png" alt="image"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/12/12/CMP构建部署集成/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-离线环境下安装logstash插件" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -673,7 +1344,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 xljqq
+    		&copy; 2019 xljqq
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
